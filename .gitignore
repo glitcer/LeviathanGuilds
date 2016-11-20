@@ -8,7 +8,7 @@ nb-configuration.xml
 *.idea
 .idea/
 .idea
-XtremeObjectSaver.iml
+LeviathanGuilds.iml
 
 # maven
 target/

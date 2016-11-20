@@ -1,5 +1,6 @@
 package me.khalit.projectleviathan.utils;
 
+import me.khalit.projectleviathan.data.User;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -33,6 +34,10 @@ public class Util {
 
     public static void sendMessage(CommandSender sender, String text) {
         sender.sendMessage(fixColors(text));
+    }
+
+    public static void sendMessage(User user, String text) {
+        user.getPlayer().sendMessage(fixColors(text));
     }
 
     public static void sendList(Player player, List<String> list) {
