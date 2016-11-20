@@ -1,0 +1,32 @@
+# netbeans
+nbproject/
+nbactions.xml
+nb-configuration.xml
+
+# intellij idea
+*.idea/
+*.idea
+.idea/
+.idea
+XtremeObjectSaver.iml
+
+# maven
+target/
+dependency-reduced-pom.xml
+
+# vim
+.*.sw[a-p]
+
+# various other potential build files
+build/
+bin/
+dist/
+manifest.mf
+
+# Mac filesystem dust
+.DS_Store/
+
+# Linux temp files
+*~
+src/main/java/META-INF/
+src/test/
