@@ -1,25 +1,26 @@
 package me.khalit.projectleviathan.data.sql;
 
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.Data;
 import lombok.Getter;
 
+@Data
 public class HikariConnector {
 
-    private final String HOST;
-    private final int PORT;
-    private final String DATABASE;
-    private final String USER;
-    private final String PASSWORD;
+    private final String host;
+    private final int port;
+    private final String database;
+    private final String user;
+    private final String password;
 
-    @Getter
     private HikariDataSource dataSource;
 
     public HikariConnector(String host, int port, String user, String password, String database) {
-        this.DATABASE = database;
-        this.HOST = host;
-        this.PORT = port;
-        this.USER = user;
-        this.PASSWORD = password;
+        this.database = database;
+        this.host = host;
+        this.port = port;
+        this.user = user;
+        this.password = password;
     }
 
     public void connect() {
@@ -28,11 +29,11 @@ public class HikariConnector {
         dataSource.addDataSourceProperty("prepStmtCacheSize", 250);
         dataSource.addDataSourceProperty("prepStmtCacheSqlLimit", 2048);
         dataSource.addDataSourceProperty("cachePrepStmts", true);
-        dataSource.addDataSourceProperty("serverName", HOST);
-        dataSource.addDataSourceProperty("port", PORT);
-        dataSource.addDataSourceProperty("databaseName", DATABASE);
-        dataSource.addDataSourceProperty("user", USER);
-        dataSource.addDataSourceProperty("password", PASSWORD);
+        dataSource.addDataSourceProperty("serverName", host);
+        dataSource.addDataSourceProperty("port", port);
+        dataSource.addDataSourceProperty("databaseName", database);
+        dataSource.addDataSourceProperty("user", user);
+        dataSource.addDataSourceProperty("password", password);
     }
 
 }

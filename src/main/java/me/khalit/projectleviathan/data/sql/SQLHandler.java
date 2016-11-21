@@ -1,6 +1,5 @@
 package me.khalit.projectleviathan.data.sql;
 
-import com.zaxxer.hikari.HikariDataSource;
 import lombok.Data;
 
 import java.sql.Connection;
@@ -15,17 +14,21 @@ public class SQLHandler {
 
     public SQLHandler(String host, int port, String user, String password, String database) {
         hikariConnector = new HikariConnector(host, port, user, password, database);
-        hikariConnector.connect();
-        try {
-            connection = hikariConnector.getDataSource().getConnection();
-            createTables();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    }
+
+    public Connection getConnection() {
+        if (connection == null) {
+            try {
+                connection = hikariConnector.getDataSource().getConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+        return connection;
     }
 
     public void createTables() throws SQLException {
-        PreparedStatement preparedStatement = connection
+        PreparedStatement preparedStatement = getConnection()
                 .prepareStatement(
                         "CREATE TABLE IF NOT EXISTS users (" +
                                 "uuid VARCHAR(36) NOT NULL," +

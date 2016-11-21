@@ -8,6 +8,7 @@ import me.khalit.projectleviathan.configuration.Messages;
 import me.khalit.projectleviathan.configuration.Settings;
 import me.khalit.projectleviathan.data.sql.SQLHandler;
 import me.khalit.projectleviathan.listeners.PlayerJoinListener;
+import me.khalit.projectleviathan.utils.thread.WorkThread;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,6 +27,8 @@ public class Main extends JavaPlugin {
     public void onLoad() {
         instance = this;
         logger = getLogger();
+        logger.info("Initializing work thread...");
+        new WorkThread().start();
     }
 
     public void onEnable() {
@@ -45,6 +48,8 @@ public class Main extends JavaPlugin {
                     Settings.getString("mysql.user"),
                     Settings.getString("mysql.pass"),
                     Settings.getString("mysql.base"));
+            sqlHandler.getHikariConnector().connect();
+            sqlHandler.createTables();
         } catch (Exception e) {
             logger.severe("[MySQL] Server is not responding or credentials are wrong." +
                     " Check your MySQL credentials in config.yml file!");
