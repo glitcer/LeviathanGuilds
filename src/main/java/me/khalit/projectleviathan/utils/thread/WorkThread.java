@@ -43,18 +43,19 @@ public class WorkThread extends Thread {
             try {
                 work.execute();
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new WorkException("An error occured with executing specified worker");
             }
         }
     }
 
     public static void work(Work work) {
-        work(work.getType(), work.getMethod(), work.getParams());
+        work(work.getType(), work.getParams());
     }
 
-    public static void work(WorkType type, WorkMethod method, Object... params) {
+    public static void work(WorkType type, Object... params) {
         final WorkThread thread = getThread();
-        Work work = new Work(type, method, params);
+        Work work = new Work(type, params);
 
         temporary.stream()
                 .filter(tempWork -> !thread.works.contains(tempWork))

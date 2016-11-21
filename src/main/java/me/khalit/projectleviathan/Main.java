@@ -1,15 +1,19 @@
 package me.khalit.projectleviathan;
 
-import lombok.Data;
 import lombok.Getter;
-import me.khalit.projectleviathan.configuration.ConfigurableFile;
-import me.khalit.projectleviathan.configuration.Locale;
-import me.khalit.projectleviathan.configuration.Messages;
-import me.khalit.projectleviathan.configuration.Settings;
+import me.khalit.projectleviathan.configuration.*;
+import me.khalit.projectleviathan.data.User;
+import me.khalit.projectleviathan.data.managers.UserManager;
 import me.khalit.projectleviathan.data.sql.SQLHandler;
 import me.khalit.projectleviathan.listeners.PlayerJoinListener;
+import me.khalit.projectleviathan.utils.element.TabExecutor;
+import me.khalit.projectleviathan.utils.runnables.AsyncTabHeavyRefreshTask;
+import me.khalit.projectleviathan.utils.runnables.AsyncTabLightRefreshTask;
+import me.khalit.projectleviathan.utils.runnables.TPSMonitor;
 import me.khalit.projectleviathan.utils.thread.WorkThread;
+import me.khalit.projectleviathan.utils.thread.WorkType;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -38,8 +42,15 @@ public class Main extends JavaPlugin {
         Locale.initializeLocaleFiles();
         logger.info("   Loading settings...");
         saveDefaultConfig();
+        TabReader.loadConfiguration();
         new Settings();
         new Messages();
+        logger.info("Scheduling runnables...");
+        Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new AsyncTabLightRefreshTask(), 20L, 20L);
+        Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new AsyncTabHeavyRefreshTask(), 20L, 3600L);
+        Bukkit.getScheduler().runTaskTimer(this, new TPSMonitor(), 1000L, 50L);
+        logger.info("Executing tab...");
+        TabExecutor.load();
         logger.info("Connecting to MySQL...");
         try {
             sqlHandler = new SQLHandler(
@@ -58,6 +69,13 @@ public class Main extends JavaPlugin {
         logger.info("Registering listeners...");
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new PlayerJoinListener(), this);
+        logger.info("Loading online players...");
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            User user = UserManager.loadUser(player);
+
+            Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(),
+                    () -> WorkThread.work(WorkType.TAB_LIST_SEND, player));
+        }
     }
 
 }

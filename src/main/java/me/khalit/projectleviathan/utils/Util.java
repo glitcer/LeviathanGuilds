@@ -7,9 +7,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Util {
+
+    private static final Random random = new Random();
 
     public static String fixColors(String raw) {
         return ChatColor.translateAlternateColorCodes('&', raw);
@@ -64,6 +67,24 @@ public class Util {
         for (Player player : Bukkit.getOnlinePlayers()) {
             sendMessage(player, text);
         }
+    }
+
+    public static boolean getChance(double chance) {
+        return (Math.random() < chance);
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
+    }
+
+    public static int getRandomInteger(int min, int max) {
+        int i = random.nextInt((max - min) + 1) + min;
+        return i;
     }
 
 }
