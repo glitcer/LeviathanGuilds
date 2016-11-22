@@ -39,6 +39,10 @@ public class User implements Data {
         return Bukkit.getPlayer(this.getUniqueId());
     }
 
+    public boolean isOnline() {
+        return getPlayer() != null;
+    }
+
     public boolean hasGuild() {
         return guild != null;
     }
