@@ -3,6 +3,8 @@ package me.khalit.projectleviathan;
 import lombok.Getter;
 import me.khalit.projectleviathan.configuration.*;
 import me.khalit.projectleviathan.data.User;
+import me.khalit.projectleviathan.data.managers.GuildManager;
+import me.khalit.projectleviathan.data.managers.RegionManager;
 import me.khalit.projectleviathan.data.managers.UserManager;
 import me.khalit.projectleviathan.data.sql.SQLHandler;
 import me.khalit.projectleviathan.listeners.PlayerJoinListener;
@@ -69,13 +71,12 @@ public class Main extends JavaPlugin {
         logger.info("Registering listeners...");
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new PlayerJoinListener(), this);
-        logger.info("Loading online players...");
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            User user = UserManager.loadUser(player);
-
-            Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(),
-                    () -> WorkThread.work(WorkType.TAB_LIST_SEND, player));
-        }
+        logger.info("Loading players...");
+        UserManager.loadUsers();
+        logger.info("Loading guilds...");
+        GuildManager.loadGuilds();
+        logger.info("Loading regions...");
+        RegionManager.loadRegions();
     }
 
 }

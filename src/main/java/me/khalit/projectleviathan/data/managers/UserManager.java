@@ -3,6 +3,7 @@ package me.khalit.projectleviathan.data.managers;
 import lombok.Getter;
 import me.khalit.projectleviathan.Main;
 import me.khalit.projectleviathan.configuration.Locale;
+import me.khalit.projectleviathan.data.Rank;
 import me.khalit.projectleviathan.data.User;
 import org.bukkit.entity.Player;
 
@@ -20,36 +21,28 @@ public class UserManager {
     private static final List<User> users = new ArrayList<>();
 
     public static List<String> toStrings(List<User> users) {
-        return users.stream().map(user -> user.getUniqueId()
-                .toString()).collect(Collectors.toList());
-    }
-
-    public static List<String> toNames(List<String> users) {
-        List<String> strings = new ArrayList<>();
-        for (String str : users) {
-            UUID uuid = UUID.fromString(str);
-            User user = getUser(uuid);
-            assert user != null;
-            strings.add(user.getName());
-        }
-        return strings;
+        return users.stream().map(User::getName).collect(Collectors.toList());
     }
 
     public static List<User> fromStrings(List<String> strings) {
         return strings.stream().map(str -> getUser(UUID.fromString(str))).collect(Collectors.toList());
     }
 
-    public static User loadUser(Player player) {
-        User user = null;
+    public static void loadUsers() {
         try {
             PreparedStatement stmt = Main.getSqlHandler().getConnection().prepareStatement(
-                    "SELECT * FROM users WHERE uuid=?");
-            stmt.setString(1, player.getUniqueId().toString());
+                    "SELECT * FROM users");
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                user = new User(rs.getString("name"), UUID.fromString(rs.getString("uuid")));
+                User user = new User(rs.getString("name"), UUID.fromString(rs.getString("uuid")));
                 user.setLocale(Locale.fileByLocale(rs.getString("locale")));
+                user.setHonor(rs.getInt("honor"));
+                Rank rank = new Rank(user);
+                rank.setPoints(rs.getInt("points"));
+                rank.setKills(rs.getInt("kills"));
+                rank.setDeaths(rs.getInt("deaths"));
+                user.setRank(rank);
                 UserManager.getUsers().add(user);
             }
 
@@ -58,7 +51,6 @@ public class UserManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return user;
     }
 
     public static boolean isLoaded(Player player) {

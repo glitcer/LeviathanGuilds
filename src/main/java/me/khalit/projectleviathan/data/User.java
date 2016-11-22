@@ -4,6 +4,7 @@ import me.khalit.projectleviathan.Main;
 import me.khalit.projectleviathan.api.Data;
 import me.khalit.projectleviathan.configuration.ConcurrentConfigurableFile;
 import me.khalit.projectleviathan.configuration.Locale;
+import me.khalit.projectleviathan.data.managers.UserManager;
 import me.khalit.projectleviathan.utils.Reflection;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -20,6 +21,9 @@ public class User implements Data {
 
     private final UUID uniqueId;
     private final String name;
+    private Guild guild;
+    private Rank rank;
+    private int honor;
     private ConcurrentConfigurableFile locale;
 
     public User(String name, UUID uuid) {
@@ -33,6 +37,10 @@ public class User implements Data {
 
     public Player getPlayer() {
         return Bukkit.getPlayer(this.getUniqueId());
+    }
+
+    public boolean hasGuild() {
+        return guild != null;
     }
 
     public int getPing() {
@@ -49,55 +57,35 @@ public class User implements Data {
     }
 
     public boolean hasPlayedBefore() {
-        try {
-            PreparedStatement stmt = Main.getSqlHandler().getConnection().prepareStatement(
-                    "SELECT uuid FROM users WHERE uuid=?");
-            stmt.setString(1, uniqueId.toString());
-
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return true;
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        return UserManager.getUsers().contains(this);
     }
 
     @Override
     public void save() {
-        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
-            PreparedStatement statement;
-            try {
-                statement = Main.getSqlHandler().getConnection().prepareStatement(
-                        "UPDATE users SET `locale`=? WHERE uuid=?");
-                statement.setString(1, Locale.localeByConfigurableFile(locale));
-                statement.setString(2, uniqueId.toString());
-                statement.executeUpdate();
-                statement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
+        try {
+            PreparedStatement statement = Main.getSqlHandler().getConnection().prepareStatement(
+                    "UPDATE users SET `locale`=? WHERE uuid=?");
+            statement.setString(1, Locale.localeByConfigurableFile(locale));
+            statement.setString(2, uniqueId.toString());
+            statement.executeUpdate();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void insert() {
-        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
-            PreparedStatement statement;
-            try {
-                statement = Main.getSqlHandler().getConnection().prepareStatement(
-                        "INSERT INTO users VALUES (?, ?, ?)");
-                statement.setString(1, uniqueId.toString());
-                statement.setString(2, name);
-                statement.setString(3, Locale.localeByConfigurableFile(locale));
-                statement.executeUpdate();
-                statement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
+        try {
+            PreparedStatement statement = Main.getSqlHandler().getConnection().prepareStatement(
+                    "INSERT INTO users VALUES (?, ?, ?)");
+            statement.setString(1, uniqueId.toString());
+            statement.setString(2, name);
+            statement.setString(3, Locale.localeByConfigurableFile(locale));
+            statement.executeUpdate();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
