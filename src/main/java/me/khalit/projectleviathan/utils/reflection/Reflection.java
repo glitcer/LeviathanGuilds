@@ -1,4 +1,4 @@
-package me.khalit.projectleviathan.utils;
+package me.khalit.projectleviathan.utils.reflection;
 
 import com.google.common.collect.Maps;
 import org.bukkit.Bukkit;
@@ -10,19 +10,6 @@ import java.util.Map;
 public class Reflection {
 
     private static String _versionString;
-
-    public static Class<?> getCraftClass(String ClassName) {
-        String name = Bukkit.getServer().getClass().getPackage().getName();
-        String version = name.substring(name.lastIndexOf('.') + 1) + ".";
-        String className = "net.minecraft.server." + version + ClassName;
-        Class<?> c = null;
-        try {
-            c = Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return c;
-    }
 
     public static Object getHandle(Object entity) {
         Object nms_entity = null;
@@ -47,6 +34,20 @@ public class Reflection {
         return null;
     }
 
+    public static Field getField(Class<?> target, String name, Class<?> fieldType, int index) {
+        for (final Field field : target.getDeclaredFields()) {
+            if ((name == null || field.getName().equals(name)) && fieldType.isAssignableFrom(field.getType()) && index-- <= 0) {
+                field.setAccessible(true);
+
+                return field;
+            }
+        }
+
+        if (target.getSuperclass() != null) {
+            return getField(target.getSuperclass(), name, fieldType, index);
+        }
+        throw new IllegalArgumentException("Cannot find field with type " + fieldType);
+    }
     public static Method getMethod(Class<?> cl, String method, Class<?>[] args) {
         for (Method m : cl.getMethods()) {
             if (m.getName().equals(method)
@@ -160,7 +161,7 @@ public class Reflection {
     private static final Map<String, Class<?>> _loadedOBCClasses = Maps.newHashMap();
 
 
-    public synchronized static Class<?> getNMSClass(String className) {
+    public synchronized static Class<?> getCraftClass(String className) {
         if(_loadedNMSClasses.containsKey(className)){
             return _loadedNMSClasses.get(className);
         }
@@ -179,7 +180,7 @@ public class Reflection {
     }
 
 
-    public synchronized static Class<?> getOBCClass(String className) {
+    public synchronized static Class<?> getBukkitClass(String className) {
         if(_loadedOBCClasses.containsKey(className)){
             return _loadedOBCClasses.get(className);
         }

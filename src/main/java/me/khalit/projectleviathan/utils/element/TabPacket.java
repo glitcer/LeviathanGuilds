@@ -1,9 +1,9 @@
 package me.khalit.projectleviathan.utils.element;
 
 import com.mojang.authlib.GameProfile;
-import me.khalit.projectleviathan.utils.Reflection;
+import me.khalit.projectleviathan.utils.reflection.Reflection;
 import me.khalit.projectleviathan.utils.Util;
-import org.bukkit.Location;
+import me.khalit.projectleviathan.utils.reflection.packet.PacketInjector;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Constructor;
@@ -11,14 +11,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class TabPacket {
 
-    private static final Field CONNECTION = Reflection.getField(Reflection.getCraftClass("EntityPlayer"), "playerConnection");
-    private static final Method HANDLE = Reflection.getMethod(Reflection.getOBCClass("entity.CraftEntity"), "getHandle");
-    private static final Method SEND$PACKET = Reflection.getTypedMethod(Reflection.getCraftClass("PlayerConnection"), "sendPacket", Reflection.getCraftClass("Packet"));
     private static final Class<?> PACKET_PLAY_OUT_PLAYER_INFO = Reflection.getCraftClass("PacketPlayOutPlayerInfo");
     private static final Class<?> PACKET_PLAY_OUT_PLAYER_LIST_HEADER_FOOTER = Reflection.getCraftClass("PacketPlayOutPlayerListHeaderFooter");
     private static final Class<?> PACKET_PLAY_OUT_PLAYER_INFO$ENUM_PLAYER_INFO_ACTION = Reflection.getCraftClass("PacketPlayOutPlayerInfo$EnumPlayerInfoAction");
@@ -53,7 +49,7 @@ public class TabPacket {
             e.printStackTrace();
         }
 
-        sendPacket(player, cons);
+        PacketInjector.sendPacket(player, cons);
     }
 
 
@@ -82,17 +78,7 @@ public class TabPacket {
         } catch (IllegalArgumentException | IllegalAccessException e) {
             e.printStackTrace();
         }
-        sendPacket(player, cons);
-    }
-
-    private static void sendPacket(Player p, Object packet) {
-        try {
-            Object handle = p.getClass().getMethod("getHandle").invoke(p);
-            Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
-            playerConnection.getClass().getMethod("sendPacket", Reflection.getCraftClass("Packet")).invoke(playerConnection, packet);
-        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException | NoSuchFieldException e) {
-            e.printStackTrace();
-        }
+        PacketInjector.sendPacket(player, cons);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

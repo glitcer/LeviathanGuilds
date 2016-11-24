@@ -9,6 +9,7 @@ import me.khalit.projectleviathan.data.managers.UserManager;
 import me.khalit.projectleviathan.data.sql.SQLHandler;
 import me.khalit.projectleviathan.listeners.PlayerJoinListener;
 import me.khalit.projectleviathan.utils.element.TabExecutor;
+import me.khalit.projectleviathan.utils.exceptions.MetricsException;
 import me.khalit.projectleviathan.utils.runnables.AsyncTabHeavyRefreshTask;
 import me.khalit.projectleviathan.utils.runnables.AsyncTabLightRefreshTask;
 import me.khalit.projectleviathan.utils.runnables.TPSMonitor;
@@ -19,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 public class Main extends JavaPlugin {
@@ -38,6 +40,17 @@ public class Main extends JavaPlugin {
     }
 
     public void onEnable() {
+        logger.info("Starting metrics...");
+        try {
+            Metrics metrics = new Metrics(this);
+            metrics.start();
+        } catch (Exception e) {
+            try {
+                throw new MetricsException();
+            } catch (MetricsException ignoreStackTrace) {
+
+            }
+        }
         logger.info("Loading resources...");
         logger.info("Loading configurations...");
         logger.info("   Loading locales....");

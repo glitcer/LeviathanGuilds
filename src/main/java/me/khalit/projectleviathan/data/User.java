@@ -5,14 +5,13 @@ import me.khalit.projectleviathan.api.Data;
 import me.khalit.projectleviathan.configuration.ConcurrentConfigurableFile;
 import me.khalit.projectleviathan.configuration.Locale;
 import me.khalit.projectleviathan.data.managers.UserManager;
-import me.khalit.projectleviathan.utils.Reflection;
+import me.khalit.projectleviathan.utils.reflection.Reflection;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
@@ -49,7 +48,7 @@ public class User implements Data {
 
     public int getPing() {
         try {
-            Class<?> craftPlayerClass = Reflection.getOBCClass("entity.CraftPlayer");
+            Class<?> craftPlayerClass = Reflection.getBukkitClass("entity.CraftPlayer");
             Object craftPlayer = craftPlayerClass.cast(getPlayer());
             Object handle = craftPlayerClass.getMethod("getHandle").invoke(craftPlayer);
             Field ping = handle.getClass().getField("ping");

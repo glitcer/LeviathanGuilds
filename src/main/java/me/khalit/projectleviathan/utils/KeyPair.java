@@ -10,6 +10,10 @@ public class KeyPair<K, V> {
 
     public KeyPair() {}
 
+    public KeyPair(K valueFirst, V valueSecond) {
+        put(valueFirst, valueSecond);
+    }
+
     public void put(K valueFirst, V valueSecond) {
         this.valueFirst = valueFirst;
         this.valueSecond = valueSecond;

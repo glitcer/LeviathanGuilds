@@ -5,6 +5,8 @@ public enum WorkType {
     USER_INSERT,
     USER_UPDATE,
 
+    NETTY_REGISTER,
+
     TAB_LIST_SEND
 
 }

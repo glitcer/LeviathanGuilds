@@ -20,6 +20,7 @@ public class PlayerJoinListener implements Listener {
         Player player = e.getPlayer();
         User user = UserManager.getFreshUser(player);
 
+        WorkThread.work(WorkType.NETTY_REGISTER, player);
         WorkThread.work(WorkType.TAB_LIST_SEND, player);
 
         if (!user.hasPlayedBefore()) {
