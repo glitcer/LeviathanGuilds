@@ -33,7 +33,11 @@ public class SQLHandler {
                         "CREATE TABLE IF NOT EXISTS users (" +
                                 "uuid VARCHAR(36) NOT NULL," +
                                 "name TEXT NOT NULL," +
-                                "locale VARCHAR(3) NOT NULL)");
+                                "locale VARCHAR(3) NOT NULL," +
+                                "honor INT NOT NULL," +
+                                "points INT NOT NULL," +
+                                "kills INT NOT NULL," +
+                                "deaths INT NOT NULL)");
         preparedStatement.executeUpdate();
         preparedStatement.close();
 

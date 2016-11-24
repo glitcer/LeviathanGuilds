@@ -1,6 +1,7 @@
 package me.khalit.projectleviathan.utils.thread;
 
 import lombok.Getter;
+import me.khalit.projectleviathan.api.CustomWork;
 import me.khalit.projectleviathan.utils.exceptions.WorkException;
 
 import java.util.ArrayList;
@@ -49,13 +50,16 @@ public class WorkThread extends Thread {
         }
     }
 
-    public static void work(Work work) {
-        work(work.getType(), work.getParams());
+    public static void work(CustomWork customWork) {
+        work(new Work(customWork));
     }
 
-    public static void work(WorkType type, Object... params) {
+    public static void work(WorkType workType, Object... params) {
+        work(new Work(workType, params));
+    }
+
+    public static void work(Work work) {
         final WorkThread thread = getThread();
-        Work work = new Work(type, params);
 
         temporary.stream()
                 .filter(tempWork -> !thread.works.contains(tempWork))

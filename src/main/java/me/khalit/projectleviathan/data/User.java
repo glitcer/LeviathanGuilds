@@ -67,9 +67,13 @@ public class User implements Data {
     public void save() {
         try {
             PreparedStatement statement = Main.getSqlHandler().getConnection().prepareStatement(
-                    "UPDATE users SET `locale`=? WHERE uuid=?");
+                    "UPDATE users SET `locale`=?,`honor`=?,`points`=?,`kills`=?,`deaths`=? WHERE uuid=?");
             statement.setString(1, Locale.localeByConfigurableFile(locale));
-            statement.setString(2, uniqueId.toString());
+            statement.setInt(2, honor);
+            statement.setInt(3, rank.getPoints());
+            statement.setInt(4, rank.getKills());
+            statement.setInt(5, rank.getDeaths());
+            statement.setString(6, uniqueId.toString());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -81,10 +85,14 @@ public class User implements Data {
     public void insert() {
         try {
             PreparedStatement statement = Main.getSqlHandler().getConnection().prepareStatement(
-                    "INSERT INTO users VALUES (?, ?, ?)");
+                    "INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?)");
             statement.setString(1, uniqueId.toString());
             statement.setString(2, name);
             statement.setString(3, Locale.localeByConfigurableFile(locale));
+            statement.setInt(4, honor);
+            statement.setInt(5, rank.getPoints());
+            statement.setInt(6, rank.getKills());
+            statement.setInt(7, rank.getDeaths());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
