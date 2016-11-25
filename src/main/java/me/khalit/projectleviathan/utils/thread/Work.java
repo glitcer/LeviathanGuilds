@@ -40,20 +40,8 @@ public class Work {
                     ((User)params[0]).save();
                     return;
                 }
-                case NETTY_REGISTER: {
-                    try {
-                        NettyManager.register((Player) params[0]);
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                    return;
-                }
                 case CUSTOM_WORK: {
                     customWork.work();
-                    return;
-                }
-                case PREFIX_REGISTER: {
-                    PrefixManager.register((Player) params[0]);
                     return;
                 }
                 case PREFIX_JOIN: {

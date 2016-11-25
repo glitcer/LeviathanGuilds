@@ -26,7 +26,7 @@ public class Reflection {
         try {
             Object craftPlayer = craftPlayerClass.cast(player);
             Object handle = handleMethod.invoke(craftPlayer);
-            Field ping = Reflection.getField((Class<?>) handle, "ping");
+            Field ping = Reflection.getField(handle.getClass(), "ping");
             return (int) ping.get(handle);
         } catch (Exception e) {
             e.printStackTrace();
@@ -184,41 +184,28 @@ public class Reflection {
     private static final Map<String, Class<?>> _loadedOBCClasses = Maps.newHashMap();
 
 
-    public synchronized static Class<?> getCraftClass(String className) {
-        if(_loadedNMSClasses.containsKey(className)){
-            return _loadedNMSClasses.get(className);
-        }
-
-        String fullName = "net.minecraft.server." + getVersion() + className;
-        Class<?> clazz;
+    public static Class<?> getCraftClass(final String name) {
+        final String className = "net.minecraft.server." + getVersion() + name;
+        Class<?> c = null;
         try {
-            clazz = Class.forName(fullName);
-        } catch (Exception e) {
-            e.printStackTrace();
-            _loadedNMSClasses.put(className, null);
-            return null;
+            c = Class.forName(className);
         }
-        _loadedNMSClasses.put(className, clazz);
-        return clazz;
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return c;
     }
 
-
-    public synchronized static Class<?> getBukkitClass(String className) {
-        if(_loadedOBCClasses.containsKey(className)){
-            return _loadedOBCClasses.get(className);
-        }
-
-        String fullName = "org.bukkit.craftbukkit." + getVersion() + className;
-        Class<?> clazz;
+    public static Class<?> getBukkitClass(final String name) {
+        final String className = "org.bukkit.craftbukkit." + getVersion() + name;
+        Class<?> c = null;
         try {
-            clazz = Class.forName(fullName);
-        } catch (Exception e) {
-            e.printStackTrace();
-            _loadedOBCClasses.put(className, null);
-            return null;
+            c = Class.forName(className);
         }
-        _loadedOBCClasses.put(className, clazz);
-        return clazz;
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return c;
     }
 
 

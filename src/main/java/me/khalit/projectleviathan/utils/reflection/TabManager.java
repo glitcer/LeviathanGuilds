@@ -28,8 +28,6 @@ public class TabManager {
             KeyPair<Integer, Integer> slot = new KeyPair<>();
             slot.put(column, row);
 
-            if (slot == null) continue;
-
             String str = TabReader.getSlots().get(slot) == null ? "" : TabReader.getSlots().get(slot);
             TabExecutor.update(player, row, column,
                     replaceVariables(player, str));
