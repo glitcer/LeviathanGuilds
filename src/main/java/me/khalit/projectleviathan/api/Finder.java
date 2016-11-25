@@ -68,7 +68,6 @@ public class Finder {
                 if (annotation instanceof Aliases) {
                     Aliases aliases = (Aliases) annotation;
                     command.setAliases(Arrays.asList(aliases.value()));
-                    continue;
                 }
             }
             if (command.getName() == null) {

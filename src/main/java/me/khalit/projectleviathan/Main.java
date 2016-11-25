@@ -11,7 +11,7 @@ import me.khalit.projectleviathan.data.managers.UserManager;
 import me.khalit.projectleviathan.data.sql.SQLHandler;
 import me.khalit.projectleviathan.api.Finder;
 import me.khalit.projectleviathan.listeners.PlayerJoinListener;
-import me.khalit.projectleviathan.utils.element.TabExecutor;
+import me.khalit.projectleviathan.utils.reflection.TabExecutor;
 import me.khalit.projectleviathan.utils.exceptions.MetricsException;
 import me.khalit.projectleviathan.utils.runnables.AsyncTabHeavyRefreshTask;
 import me.khalit.projectleviathan.utils.runnables.AsyncTabLightRefreshTask;

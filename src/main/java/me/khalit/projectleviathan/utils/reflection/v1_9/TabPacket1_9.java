@@ -1,8 +1,9 @@
-package me.khalit.projectleviathan.utils.element;
+package me.khalit.projectleviathan.utils.reflection.v1_9;
 
 import com.mojang.authlib.GameProfile;
-import me.khalit.projectleviathan.utils.reflection.Reflection;
+import me.khalit.projectleviathan.api.TabPacket;
 import me.khalit.projectleviathan.utils.Util;
+import me.khalit.projectleviathan.utils.reflection.Reflection;
 import me.khalit.projectleviathan.utils.reflection.packet.PacketInjector;
 import org.bukkit.entity.Player;
 
@@ -13,27 +14,33 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TabPacket {
+public class TabPacket1_9 implements TabPacket {
 
-    private static final Class<?> PACKET_PLAY_OUT_PLAYER_INFO = Reflection.getCraftClass("PacketPlayOutPlayerInfo");
-    private static final Class<?> PACKET_PLAY_OUT_PLAYER_LIST_HEADER_FOOTER = Reflection.getCraftClass("PacketPlayOutPlayerListHeaderFooter");
-    private static final Class<?> PACKET_PLAY_OUT_PLAYER_INFO$ENUM_PLAYER_INFO_ACTION = Reflection.getCraftClass("PacketPlayOutPlayerInfo$EnumPlayerInfoAction");
-    private static final Class<?> PACKET_PLAY_OUT_PLAYER_INFO$PLAYER_INFO_DATA = Reflection.getCraftClass("PacketPlayOutPlayerInfo$PlayerInfoData");
-    private static final Class<?> ICHAT_BASE_COMPONENT = Reflection.getCraftClass("IChatBaseComponent");
-    private static final Class<?> ICHAT_BASE_COMPONENT$CHAT_SERIALIZER = Reflection.getCraftClass("IChatBaseComponent$ChatSerializer");
-    private static Class<?> ENUM_GAMEMODE = Reflection.getCraftClass("EnumGamemode");
-    private static final Object PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR =
+    private final Class<?> PACKET_PLAY_OUT_PLAYER_INFO = Reflection.getCraftClass("PacketPlayOutPlayerInfo");
+    private final Class<?> PACKET_PLAY_OUT_PLAYER_LIST_HEADER_FOOTER = Reflection.getCraftClass("PacketPlayOutPlayerListHeaderFooter");
+    private final Class<?> PACKET_PLAY_OUT_PLAYER_INFO$ENUM_PLAYER_INFO_ACTION = Reflection.getCraftClass("PacketPlayOutPlayerInfo$EnumPlayerInfoAction");
+    private final Class<?> PACKET_PLAY_OUT_PLAYER_INFO$PLAYER_INFO_DATA = Reflection.getCraftClass("PacketPlayOutPlayerInfo$PlayerInfoData");
+    private final Class<?> ICHAT_BASE_COMPONENT = Reflection.getCraftClass("IChatBaseComponent");
+    private final Class<?> ICHAT_BASE_COMPONENT$CHAT_SERIALIZER = Reflection.getCraftClass("IChatBaseComponent$ChatSerializer");
+    private Class<?> WORLD_SETTINGS$ENUM_GAMEMODE = Reflection.getCraftClass("WorldSettings$EnumGamemode");
+    private final Object PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR =
             Reflection.getConstructor(PACKET_PLAY_OUT_PLAYER_INFO);
 
+    public TabPacket1_9() { }
+
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static void sendPacket(Player player, GameProfile gp, String slot, String mode) {
+    public void sendPacket(Player player, GameProfile gp, String slot, String mode) {
         Object cons = Reflection.getConstructor(PACKET_PLAY_OUT_PLAYER_INFO);
         Field a = Reflection.getField(PACKET_PLAY_OUT_PLAYER_INFO, "a");
         Field b = Reflection.getField(PACKET_PLAY_OUT_PLAYER_INFO, "b");
 
         try {
-            a.setAccessible(true);
-            a.set(cons, Enum.valueOf((Class<Enum>) PACKET_PLAY_OUT_PLAYER_INFO$ENUM_PLAYER_INFO_ACTION, mode));
+            if (a != null) {
+                a.setAccessible(true);
+                if (PACKET_PLAY_OUT_PLAYER_INFO$ENUM_PLAYER_INFO_ACTION != null) {
+                    a.set(cons, Enum.valueOf((Class<Enum>) PACKET_PLAY_OUT_PLAYER_INFO$ENUM_PLAYER_INFO_ACTION, mode));
+                }
+            }
         } catch (IllegalArgumentException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -42,9 +49,10 @@ public class TabPacket {
         ppi.add(getPlayerInfo(gp, slot));
 
         try {
-            b.setAccessible(true);
-            b.set(cons, ppi);
-
+            if (b != null) {
+                b.setAccessible(true);
+                b.set(cons, ppi);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,7 +61,7 @@ public class TabPacket {
     }
 
 
-    public static void sendPacketHeaderFooter(Player player, String header, String footer) {
+    public void sendPacketHeaderFooter(Player player, String header, String footer) {
         Object cons = Reflection.getConstructor(PACKET_PLAY_OUT_PLAYER_LIST_HEADER_FOOTER);
         Field a = Reflection.getField(PACKET_PLAY_OUT_PLAYER_LIST_HEADER_FOOTER, "a");
         Field b = Reflection.getField(PACKET_PLAY_OUT_PLAYER_LIST_HEADER_FOOTER, "b");
@@ -82,19 +90,24 @@ public class TabPacket {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private static Object getPlayerInfo(GameProfile gp, String slot) {
+    public Object getPlayerInfo(GameProfile gp, String slot) {
         try {
-            Constructor<?> cons = PACKET_PLAY_OUT_PLAYER_INFO$PLAYER_INFO_DATA
-                    .getDeclaredConstructor(
-                            PACKET_PLAY_OUT_PLAYER_INFO,
-                            GameProfile.class,
-                            int.class,
-                            ENUM_GAMEMODE, ICHAT_BASE_COMPONENT);
-            return cons.newInstance(PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR,
-                    gp,
-                    35,
-                    Enum.valueOf((Class<Enum>) ENUM_GAMEMODE, "SURVIVAL"),
-                    build("{\"text\": \"" + Util.fixColors(slot) + "\"}"));
+            Constructor<?> cons = null;
+            if (PACKET_PLAY_OUT_PLAYER_INFO$PLAYER_INFO_DATA != null) {
+                cons = PACKET_PLAY_OUT_PLAYER_INFO$PLAYER_INFO_DATA
+                        .getDeclaredConstructor(
+                                PACKET_PLAY_OUT_PLAYER_INFO,
+                                GameProfile.class,
+                                int.class,
+                                WORLD_SETTINGS$ENUM_GAMEMODE, ICHAT_BASE_COMPONENT);
+            }
+            if (cons != null) {
+                return cons.newInstance(PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR,
+                        gp,
+                        35,
+                        Enum.valueOf((Class<Enum>) WORLD_SETTINGS$ENUM_GAMEMODE, "SURVIVAL"),
+                        build("{\"text\": \"" + Util.fixColors(slot) + "\"}"));
+            }
         } catch (InstantiationException
                 | IllegalAccessException
                 | IllegalArgumentException
@@ -105,7 +118,7 @@ public class TabPacket {
         return null;
     }
 
-    private static Object build(String content) {
+    public Object build(String content) {
         Method method = Reflection.getTypedMethod(
                 ICHAT_BASE_COMPONENT$CHAT_SERIALIZER, "a",
                 ICHAT_BASE_COMPONENT, String.class);
@@ -118,5 +131,6 @@ public class TabPacket {
         }
         return null;
     }
+
 
 }

@@ -1,4 +1,4 @@
-package me.khalit.projectleviathan.utils.element;
+package me.khalit.projectleviathan.utils.reflection;
 
 import me.khalit.projectleviathan.configuration.Settings;
 import me.khalit.projectleviathan.data.Guild;
@@ -33,7 +33,7 @@ public class PrefixManager {
             else if (g.getTag().equals(o.getTag())) {
                 t.setPrefix(parse(Settings.getString("prefixes.friendly"), o));
             }
-            else if (o.getAllies().contains(g.getTag())) {
+            else if (o.getAllies().contains(g)) {
                 t.setPrefix(parse(Settings.getString("prefixes.ally"), o));
             }
             else {

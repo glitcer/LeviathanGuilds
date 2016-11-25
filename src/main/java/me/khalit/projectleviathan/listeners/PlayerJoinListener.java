@@ -5,6 +5,7 @@ import me.khalit.projectleviathan.configuration.Locale;
 import me.khalit.projectleviathan.data.Rank;
 import me.khalit.projectleviathan.data.User;
 import me.khalit.projectleviathan.data.managers.UserManager;
+import me.khalit.projectleviathan.utils.reflection.packet.NettyManager;
 import me.khalit.projectleviathan.utils.thread.WorkThread;
 import me.khalit.projectleviathan.utils.thread.WorkType;
 import org.bukkit.entity.Player;
@@ -21,10 +22,14 @@ public class PlayerJoinListener implements Listener {
 
         // delegate custom work test
         WorkThread.work(() -> player.sendMessage("Custom Multi-threaded Work -> Test"));
-
-        WorkThread.work(WorkType.NETTY_REGISTER, player);
         WorkThread.work(WorkType.TAB_LIST_SEND, player);
         WorkThread.work(WorkType.PREFIX_REGISTER, player);
+
+        try {
+            NettyManager.register(player);
+        } catch (IllegalAccessException exception) {
+            exception.printStackTrace();
+        }
 
         if (!user.hasPlayedBefore()) {
             user.setLocale(Locale.fileByLocale("en"));

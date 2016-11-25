@@ -1,4 +1,4 @@
-package me.khalit.projectleviathan.utils.element;
+package me.khalit.projectleviathan.utils.reflection;
 
 import com.mojang.authlib.GameProfile;
 import lombok.Data;
@@ -18,7 +18,7 @@ public class TabExecutor {
             for (int rows = 0; rows < 20; rows++) {
                 String slot = slots[rows][columns];
                 GameProfile gp = gameProfiles[rows][columns];
-                TabPacket.sendPacket(player, gp, slot, "ADD_PLAYER");
+                ProtocolManager.getTabPacket().sendPacket(player, gp, slot, "ADD_PLAYER");
             }
         }
     }
@@ -42,7 +42,7 @@ public class TabExecutor {
 
     public static void update(Player player, int row, int column, String content) {
         slots[row][column] = Util.fixColors(content);
-        TabPacket.sendPacket(player, gameProfiles[row][column], slots[row][column], "UPDATE_DISPLAY_NAME");
+        ProtocolManager.getTabPacket().sendPacket(player, gameProfiles[row][column], slots[row][column], "UPDATE_DISPLAY_NAME");
     }
 
     public static void set(Player player, int row, int column, String content) {

@@ -1,4 +1,4 @@
-package me.khalit.projectleviathan.utils.element;
+package me.khalit.projectleviathan.utils.reflection;
 
 import me.khalit.projectleviathan.configuration.Settings;
 import me.khalit.projectleviathan.configuration.TabReader;
@@ -17,7 +17,7 @@ import java.util.Calendar;
 public class TabManager {
 
     public static void updateLight(Player player) {
-        TabPacket.sendPacketHeaderFooter(player,
+        ProtocolManager.getTabPacket().sendPacketHeaderFooter(player,
                 Settings.getString("tab.header"),
                 Settings.getString("tab.footer"));
 
@@ -38,7 +38,7 @@ public class TabManager {
     }
 
     public static void updateHeavy(Player player) {
-        TabPacket.sendPacketHeaderFooter(player,
+        ProtocolManager.getTabPacket().sendPacketHeaderFooter(player,
                 Settings.getString("tab.header"),
                 Settings.getString("tab.footer"));
 
@@ -59,7 +59,7 @@ public class TabManager {
 
 
     public static void show(Player player) {
-        TabPacket.sendPacketHeaderFooter(player,
+        ProtocolManager.getTabPacket().sendPacketHeaderFooter(player,
                 Settings.getString("tab.header"),
                 Settings.getString("tab.footer"));
 

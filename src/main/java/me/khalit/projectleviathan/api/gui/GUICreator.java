@@ -19,11 +19,13 @@ public class GUICreator {
         inventory.setItem(20, new ItemBuilder(Material.BEDROCK).setName("&8Bedrock").setLore("&7Dark bedrock", "&8from the dark sides"));
         inventory.getActionSlot(20).addListener(event -> Bukkit.broadcastMessage("&8&lIt's a trap!"));
         inventory.addOpenListener(event -> Bukkit.broadcastMessage("&8You've opened a trap!"));
+        inventory.register();
     }
 
     public static void initializeUnique(Player player) {
         ActionInventory inventory = new ActionInventory(GUISize.FIVE_ROWS, "&6Test unique inventory").unique(player);
         inventory.setItem(10, new ItemBuilder(Material.GOLDEN_APPLE));
+        inventory.register();
         inventory.show(player);
     }
 
