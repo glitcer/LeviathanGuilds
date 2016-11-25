@@ -5,7 +5,5 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 
 public interface InventoryDragHandler {
 
-    default void onInventoryDrag(InventoryDragEvent event) {
-        Player player = (Player) event.getWhoClicked();
-    }
+    void onInventoryDrag(InventoryDragEvent event);
 }

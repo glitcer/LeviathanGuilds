@@ -2,8 +2,9 @@ package me.khalit.projectleviathan.data;
 
 import me.khalit.projectleviathan.Main;
 import me.khalit.projectleviathan.api.Data;
-import me.khalit.projectleviathan.configuration.ConcurrentConfigurableFile;
+import me.khalit.projectleviathan.configuration.ConfigurableFile;
 import me.khalit.projectleviathan.configuration.Locale;
+import me.khalit.projectleviathan.configuration.LocaleFile;
 import me.khalit.projectleviathan.data.managers.UserManager;
 import me.khalit.projectleviathan.utils.reflection.Reflection;
 import org.bukkit.Bukkit;
@@ -23,7 +24,7 @@ public class User implements Data {
     private Guild guild;
     private Rank rank;
     private int honor;
-    private ConcurrentConfigurableFile locale;
+    private LocaleFile locale;
 
     public User(String name, UUID uuid) {
         this.uniqueId = uuid;

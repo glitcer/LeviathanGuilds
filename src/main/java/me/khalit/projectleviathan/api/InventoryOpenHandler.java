@@ -6,8 +6,5 @@ import org.bukkit.inventory.InventoryView;
 
 public interface InventoryOpenHandler {
 
-    default void onInventoryOpen(InventoryOpenEvent event) {
-        Player player = (Player) event.getPlayer();
-        InventoryView view = event.getView();
-    }
+    void onInventoryOpen(InventoryOpenEvent event);
 }

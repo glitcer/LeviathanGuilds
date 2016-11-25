@@ -5,7 +5,5 @@ import org.bukkit.inventory.ItemStack;
 
 public interface InventoryMoveItemHandler {
 
-    default void onInventoryMoveItem(InventoryMoveItemEvent event) {
-        ItemStack item = event.getItem();
-    }
+    void onInventoryMoveItem(InventoryMoveItemEvent event);
 }

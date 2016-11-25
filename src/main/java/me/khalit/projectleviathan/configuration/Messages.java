@@ -18,7 +18,7 @@ public class Messages {
     private static HashMap<String, HashMap<String, List<String>>> multipleKeys = new HashMap<>();
 
     public Messages() {
-        for (ConcurrentConfigurableFile file : Locale.getConfigurableFiles()) {
+        for (LocaleFile file : Locale.getConfigurableFiles()) {
             FileConfiguration messages = file.getFileConfiguration();
             for (String key : messages.getKeys(true)) {
                 if (key.toLowerCase().endsWith("list")) {

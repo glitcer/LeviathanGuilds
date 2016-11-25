@@ -12,14 +12,17 @@ import java.util.List;
 public class ConfigurableFile {
 
     @Getter
-    private static final List<ConfigurableFile> dataFiles = new ArrayList<>();
-    @Getter
     private final File file;
     private String directory;
     private FileConfiguration fileConfiguration;
 
     public ConfigurableFile(String fileName, String directory, String dirName) {
-        this.directory = dirName;
+        this.directory = directory;
+        this.file = new File(directory + fileName);
+    }
+
+    public ConfigurableFile(String fileName, String directory) {
+        this.directory = directory;
         this.file = new File(directory + fileName);
     }
 

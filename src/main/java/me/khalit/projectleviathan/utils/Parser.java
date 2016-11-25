@@ -20,30 +20,6 @@ public class Parser {
         return syntaxes.stream().map(Parser::getParsedItem).collect(Collectors.toList());
     }
 
-    public static HashMap<Material, Integer> getParsedLevelBlocks(List<String> values) {
-        HashMap<Material, Integer> map = new HashMap<>();
-        for (String val : values) {
-            String[] split = val.split(":");
-            Material key = Material.matchMaterial(split[0]);
-            int value = Integer.valueOf(split[1]);
-
-            map.put(key, value);
-        }
-        return map;
-    }
-
-    public static HashMap<Integer, Integer> getParsedFortunes(List<String> values) {
-        HashMap<Integer, Integer> map = new HashMap<>();
-        for (String val : values) {
-            String[] split = val.split(":");
-            int key = Integer.valueOf(split[0]);
-            int value = Integer.valueOf(split[1]);
-
-            map.put(key, value);
-        }
-        return map;
-    }
-
     public static ItemStack getParsedItem(String syntax) {
         String[] args = syntax.split(" ");
         ItemStack itemstack = getParsedItem(args[0], Integer.valueOf(args[1]));

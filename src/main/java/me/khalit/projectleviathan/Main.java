@@ -61,6 +61,7 @@ public class Main extends JavaPlugin {
         new Settings();
         new Messages();
         logger.info("Scheduling runnables...");
+        TPSMonitor.initialize();
         Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new AsyncTabLightRefreshTask(), 20L, 20L);
         Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new AsyncTabHeavyRefreshTask(), 20L, 3600L);
         Bukkit.getScheduler().runTaskTimer(this, new TPSMonitor(), 1000L, 50L);

@@ -19,7 +19,7 @@ public class Locale {
     @Getter
     private static final List<File> localeFiles = new ArrayList<>();
     @Getter
-    private static final List<ConcurrentConfigurableFile> configurableFiles = new ArrayList<>();
+    private static final List<LocaleFile> configurableFiles = new ArrayList<>();
 
     public static boolean exists(String locale) {
         return availableLocales.contains(locale.toUpperCase());
@@ -29,7 +29,7 @@ public class Locale {
         return localeFiles.contains(new File(directory + fileName));
     }
 
-    public static String localeByConfigurableFile(ConcurrentConfigurableFile concurrentConfigurableFile) {
+    public static String localeByConfigurableFile(LocaleFile concurrentConfigurableFile) {
         return localeByName(concurrentConfigurableFile.getFile().getName());
     }
 
@@ -40,8 +40,8 @@ public class Locale {
         return locale;
     }
 
-    public static ConcurrentConfigurableFile fileByLocale(String locale) {
-        for (ConcurrentConfigurableFile concurrentConfigurableFile : configurableFiles) {
+    public static LocaleFile fileByLocale(String locale) {
+        for (LocaleFile concurrentConfigurableFile : configurableFiles) {
             if (localeByConfigurableFile(concurrentConfigurableFile).equalsIgnoreCase(locale)) {
                 return concurrentConfigurableFile;
             }
@@ -70,10 +70,10 @@ public class Locale {
             if (file.getName().endsWith(".yml")) {
                 String locale = localeByName(file.getName());
 
-                ConcurrentConfigurableFile concurrentConfigurableFile =
-                        new ConcurrentConfigurableFile(file.getName(), directory);
-                concurrentConfigurableFile.save();
-                concurrentConfigurableFile.reload();
+                LocaleFile LocaleFile =
+                        new LocaleFile(file.getName(), directory);
+                LocaleFile.save();
+                LocaleFile.reload();
 
                 if (!exists(locale))
                     availableLocales.add(locale.toUpperCase());
@@ -81,11 +81,11 @@ public class Locale {
                 if (!existsFile(file.getName())) {
                     localeFiles.add(file);
 
-                    configurableFiles.add(concurrentConfigurableFile);
+                    configurableFiles.add(LocaleFile);
                 }
 
                 Main.getInstance().getLogger().info("    Loaded " + locale + " language! (" + file.getName() + ")");
-                Main.getInstance().getLogger().info("       Author: " + concurrentConfigurableFile
+                Main.getInstance().getLogger().info("       Author: " + LocaleFile
                         .getFileConfiguration().get("author"));
             }
         }

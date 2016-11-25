@@ -7,19 +7,19 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;
 
-public class ConcurrentConfigurableFile {
+public class LocaleFile {
 
     @Getter
     private final File file;
     private String directory;
     private FileConfiguration fileConfiguration;
 
-    public ConcurrentConfigurableFile(String fileName, String directory) {
+    public LocaleFile(String fileName, String directory) {
         this.directory = directory;
         this.file = new File(directory + fileName);
     }
 
-    public ConcurrentConfigurableFile(String fileName) {
+    public LocaleFile(String fileName) {
         this.file = new File(Main.getInstance().getDataFolder()
                 + "/" + fileName);
     }
@@ -58,4 +58,5 @@ public class ConcurrentConfigurableFile {
             fileConfiguration.setDefaults(conf);
         }
     }
+
 }

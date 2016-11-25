@@ -41,10 +41,14 @@ public class PacketCrystal {
             Object crystal = entityEnderCrystalClass.getConstructor(
                     Reflection.getCraftClass("World")).newInstance(world);
             Method locationSet = Reflection.getMethod(entityEnderCrystalClass, "setLocation");
-            Constructor packet = packetPlayOutSpawnEntityClass.getConstructor(entityClass, int.class);
+            Constructor packetPlayOutSpawn = packetPlayOutSpawnEntityClass.getConstructor(entityClass, int.class);
 
-            locationSet.invoke(crystal, location.getX(), location.getY(), location.getZ(), 0, 0);
-            packet.newInstance(crystal, 51);
+            locationSet.invoke(crystal,
+                    location.getBlockX() + 0.50,
+                    location.getBlockY(),
+                    location.getBlockZ() + 0.50,
+                    0, 0);
+            Object packet = packetPlayOutSpawn.newInstance(crystal, 51);
 
             int id = (int) Reflection.getMethod(entityEnderCrystalClass, "getId").invoke(crystal);
 

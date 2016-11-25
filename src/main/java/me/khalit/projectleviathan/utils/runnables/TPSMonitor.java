@@ -12,6 +12,11 @@ public class TPSMonitor implements Runnable {
     private static String result = "20.0";
     private transient long poll = System.nanoTime();
 
+    public static void initialize() {
+        history.add(20.0);
+        decimalFormat.setRoundingMode(RoundingMode.HALF_DOWN);
+    }
+
     @Override
     public void run() {
         long start = System.nanoTime();
@@ -33,7 +38,6 @@ public class TPSMonitor implements Runnable {
                 average += f;
             }
         }
-        decimalFormat.setRoundingMode(RoundingMode.HALF_UP);
         result = decimalFormat.format(average / history.size());
     }
 
