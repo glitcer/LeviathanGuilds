@@ -1,24 +1,20 @@
 package me.khalit.projectleviathan.data.managers;
 
 import lombok.Getter;
+import lombok.NonNull;
 import me.khalit.projectleviathan.Main;
 import me.khalit.projectleviathan.configuration.Locale;
 import me.khalit.projectleviathan.data.Rank;
 import me.khalit.projectleviathan.data.User;
 import org.bukkit.entity.Player;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class UserManager {
 
     @Getter
-    private static final List<User> users = new ArrayList<>();
+    private static final Map<UUID, User> users = new WeakHashMap<>();
 
     public static List<String> toStrings(List<User> users) {
         return users.stream().map(User::getName).collect(Collectors.toList());
@@ -40,7 +36,7 @@ public class UserManager {
                     rank.setKills(result.getInt("kills"));
                     rank.setDeaths(result.getInt("deaths"));
                     user.setRank(rank);
-                    UserManager.getUsers().add(user);
+                    UserManager.getUsers().put(UUID.fromString(result.getString("uuid")), user);
                 }
             });
         } catch (Exception e) {
@@ -48,35 +44,27 @@ public class UserManager {
         }
     }
 
+    @NonNull
     public static boolean isLoaded(Player player) {
-        for (User user : users) {
-            if (user.getUniqueId().equals(player.getUniqueId())) return true;
-        }
-        return false;
+        return users.get(player.getUniqueId()) != null;
     }
 
+    @NonNull
     public static User getUser(String name) {
-        for (User user : users) {
-            if (user.getName().equals(name)) return user;
-        }
-        return null;
+        return users.values().stream().filter(u -> u.getName().equals(name)).findFirst().orElse(null);
     }
 
+    @NonNull
     public static User getUser(Player player) {
-        for (User user : users) {
-            if (user.getUniqueId().equals(player.getUniqueId())) return user;
-        }
-        return null;
+        return getUser(player.getUniqueId());
     }
 
+    @NonNull
     public static User getUser(UUID uuid) {
-        for (User user : users) {
-            if (user.getUniqueId().toString()
-                    .equals(uuid.toString())) return user;
-        }
-        return null;
+        return users.get(uuid);
     }
 
+    @NonNull
     public static User getFreshUser(Player player) {
         return new User(player.getName(), player.getUniqueId());
     }

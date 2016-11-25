@@ -1,18 +1,20 @@
 package me.khalit.projectleviathan.data.managers;
 
 import lombok.Getter;
+import lombok.NonNull;
 import me.khalit.projectleviathan.Main;
+import me.khalit.projectleviathan.data.Guild;
 import me.khalit.projectleviathan.data.Region;
 import me.khalit.projectleviathan.utils.Serializer;
 import org.bukkit.Location;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 public class RegionManager {
 
     @Getter
-    private static final List<Region> regions = new ArrayList<>();
+    private static final Map<String, Region> regions = new WeakHashMap<>();
 
     public static void loadRegions() {
         try {
@@ -21,7 +23,7 @@ public class RegionManager {
                     Region region = new Region(result.getString("guild"),
                             Serializer.deserializeLocation(result.getString("center")), result.getInt("size"));
                     region.setParent(result.getBoolean("parent"));
-                    regions.add(region);
+                    regions.put(result.getString("guild"), region);
 
                     if (region.isParent()) {
                         region.getGuild().getConqueredRegions().add(region);
@@ -36,43 +38,33 @@ public class RegionManager {
         }
     }
 
+    @NonNull
+    public static Region getRegion(Guild guild) {
+        return getRegion(guild.getTag());
+    }
+
+    @NonNull
     public static Region getRegion(String tag) {
-        for (Region region : regions) {
-            if (region != null && region.getGuild() != null && region.getGuild()
-                    .getTag().equalsIgnoreCase(tag)) {
-                return region;
-            }
-        }
-        return null;
+        return regions.get(tag);
     }
 
+    @NonNull
     public static boolean isIn(Location loc) {
-        for (Region region : regions) {
-            if (region.isIn(loc)) {
-                return true;
-            }
-        }
-        return false;
+        return regions.values().stream().filter(u -> u.isIn(loc)).findFirst().orElse(null) != null;
     }
 
+    @NonNull
     public static Region getAt(Location loc) {
-        for (Region region : regions) {
-            if (region.isIn(loc)) {
-                return region;
-            }
-        }
-        return null;
+        return regions.values().stream().filter(u -> u.isIn(loc)).findFirst().orElse(null);
     }
 
+    @NonNull
     public static boolean isNear(Location center) {
         if (center == null) {
             return false;
         }
-        for (Region region : regions) {
-            if (region.getCenter() == null) {
-                return false;
-            }
-            if (!center.getWorld().equals(region.getCenter().getWorld())) {
+        for (Region region : regions.values()) {
+            if (region.getCenter() == null || !center.getWorld().equals(region.getCenter().getWorld())) {
                 return false;
             }
             double distance = center.distance(region.getCenter());
