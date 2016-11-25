@@ -2,6 +2,7 @@ package me.khalit.projectleviathan.utils.reflection;
 
 import com.google.common.collect.Maps;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.lang.reflect.*;
 import java.util.Arrays;
@@ -10,6 +11,28 @@ import java.util.Map;
 public class Reflection {
 
     private static String _versionString;
+    private static final Class<?> craftPlayerClass = Reflection.getBukkitClass("entity.CraftPlayer");
+    private static Method handleMethod;
+
+    static {
+        try {
+            handleMethod = craftPlayerClass.getMethod("getHandle");
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static int getPing(Player player) {
+        try {
+            Object craftPlayer = craftPlayerClass.cast(player);
+            Object handle = handleMethod.invoke(craftPlayer);
+            Field ping = Reflection.getField((Class<?>) handle, "ping");
+            return (int) ping.get(handle);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
     public static Object getHandle(Object entity) {
         Object nms_entity = null;

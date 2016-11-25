@@ -4,6 +4,11 @@ mysql:
   user: root
   pass: ''
   base: leviathanproject
+# You need to take a bukkit reference and search class for it.
+# For example EntityEnderCrystal, or EnderCrystal, EntityBlaze or EntityZombie, or just Zombie
+# Don't need to put Entity
+# Its a entity placed on center of your guild
+classPathEntity: EnderCrystal
 prefixes:
   other: '&f'
   ally: '&8[&6%tag%&8] &6'

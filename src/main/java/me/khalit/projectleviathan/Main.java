@@ -13,6 +13,7 @@ import me.khalit.projectleviathan.api.Finder;
 import me.khalit.projectleviathan.listeners.PlayerJoinListener;
 import me.khalit.projectleviathan.utils.reflection.TabExecutor;
 import me.khalit.projectleviathan.utils.exceptions.MetricsException;
+import me.khalit.projectleviathan.utils.reflection.packet.PacketEntity;
 import me.khalit.projectleviathan.utils.runnables.AsyncTabHeavyRefreshTask;
 import me.khalit.projectleviathan.utils.runnables.AsyncTabLightRefreshTask;
 import me.khalit.projectleviathan.utils.runnables.TPSMonitor;
@@ -29,6 +30,8 @@ public class Main extends JavaPlugin {
     private static Main instance;
     @Getter
     private static SQLHandler sqlHandler;
+    @Getter
+    private PacketEntity packetEntity;
 
     private final WorkThread workThread = new WorkThread();
 
@@ -62,6 +65,7 @@ public class Main extends JavaPlugin {
         TabReader.loadConfiguration();
         new Settings();
         new Messages();
+        packetEntity = new PacketEntity(Settings.getString("classPathEntity"));
         logger.info("Scheduling runnables...");
         TPSMonitor.initialize();
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, new AsyncTabLightRefreshTask(), 20L, 20L);
