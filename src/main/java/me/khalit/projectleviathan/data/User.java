@@ -50,7 +50,7 @@ public class User implements Data {
     }
 
     public boolean hasPlayedBefore() {
-        return UserManager.getUsers().contains(this);
+        return UserManager.getUsers().get(this.getUniqueId()) != null;
     }
 
     @Override

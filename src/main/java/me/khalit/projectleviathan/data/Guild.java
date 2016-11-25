@@ -37,28 +37,21 @@ public class Guild implements Data, Removable {
     @Override
     public void save() {
         try {
-            /*
-            PreparedStatement statement = Main.getSqlHandler().getConnection().prepareStatement(
-                    "UPDATE guilds SET `tag`=?,`name`=?,`owner`=?,`members`=?,`kills`=?,`deaths`=?,`validity`=?,`protection`=?," +
-                            "`born`=?,`allies`=?,`home`=?,`treasury`=?,`money`=?,`pvp`=?,`occupied`=?, WHERE tag=?");
-            statement.setString(1, tag);
-            statement.setString(2, name);
-            statement.setString(3, Serializer.serializeList(UserManager.toStrings(members)));
-            statement.setInt(4, rank.getKills());
-            statement.setInt(5, rank.getDeaths());
-            statement.setLong(6, validity);
-            statement.setLong(7, protection);
-            statement.setLong(8, born);
-            statement.setString(9, Serializer.serializeList(GuildManager.toStrings(allies)));
-            statement.setString(10, Serializer.serializeLocation(home));
-            statement.setString(11, Serializer.serializeInventory(treasury));
-            statement.setInt(12, money);
-            statement.setBoolean(13, pvp);
-            statement.setBoolean(14, occupied);
-            statement.setString(15, tag);
-            statement.executeUpdate();
-            statement.close();
-            */
+            Main.getSqlHandler().execute("UPDATE guilds SET `tag`=" + tag
+                    + ", `name`=" + name +
+                    ", `owner`=" + owner +
+                    ", `members`=" + Serializer.serializeList(UserManager.toStrings(members)) +
+                    ", `kills`=" + rank.getKills() + "" +
+                    ", `deaths`=" + rank.getDeaths() + "" +
+                    ", `validity`=" + validity + "" +
+                    ", `protection`=" + protection + "" +
+                    ", `born`=" + born + "" +
+                    ", `allies`=" + Serializer.serializeList(GuildManager.toStrings(allies)) + "" +
+                    ", `home`=" + Serializer.serializeLocation(home) + "" +
+                    ", `treasury`=" + Serializer.serializeInventory(treasury) + "" +
+                    ", `money`=" + money + "," +
+                    ", `pvp`=" + pvp + "" +
+                    ", `occupied`=" + occupied + "");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -67,26 +60,21 @@ public class Guild implements Data, Removable {
     @Override
     public void insert() {
         try {
-            /*
-            PreparedStatement statement = Main.getSqlHandler().getConnection().prepareStatement(
-                    "INSERT INTO guilds VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            statement.setString(1, tag);
-            statement.setString(2, name);
-            statement.setString(3, Serializer.serializeList(UserManager.toStrings(members)));
-            statement.setInt(4, rank.getKills());
-            statement.setInt(5, rank.getDeaths());
-            statement.setLong(6, validity);
-            statement.setLong(7, protection);
-            statement.setLong(8, born);
-            statement.setString(9, Serializer.serializeList(GuildManager.toStrings(allies)));
-            statement.setString(10, Serializer.serializeLocation(home));
-            statement.setString(11, Serializer.serializeInventory(treasury));
-            statement.setInt(12, money);
-            statement.setBoolean(13, pvp);
-            statement.setBoolean(14, occupied);
-            statement.executeUpdate();
-            statement.close();
-            */
+            Main.getSqlHandler().execute("INSERT INTO guilds VALUES (`tag`=" + tag
+                    + ", `name`=" + name +
+                    ", `owner`=" + owner +
+                    ", `members`=" + Serializer.serializeList(UserManager.toStrings(members)) +
+                    ", `kills`=" + rank.getKills() + "" +
+                    ", `deaths`=" + rank.getDeaths() + "" +
+                    ", `validity`=" + validity + "" +
+                    ", `protection`=" + protection + "" +
+                    ", `born`=" + born + "" +
+                    ", `allies`=" + Serializer.serializeList(GuildManager.toStrings(allies)) + "" +
+                    ", `home`=" + Serializer.serializeLocation(home) + "" +
+                    ", `treasury`=" + Serializer.serializeInventory(treasury) + "" +
+                    ", `money`=" + money + "," +
+                    ", `pvp`=" + pvp + "" +
+                    ", `occupied`=" + occupied + ")");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -95,13 +83,7 @@ public class Guild implements Data, Removable {
     @Override
     public void delete() {
         try {
-            /*
-            PreparedStatement stmt = Main.getSqlHandler().getConnection().prepareStatement(
-                    "DELETE FROM `guilds` WHERE `tag`=?");
-            stmt.setString(1, tag);
-            stmt.executeUpdate();
-            stmt.close();
-            */
+            Main.getSqlHandler().execute("DELETE FROM `guilds` WHERE `tag`=" + tag);
         } catch (Exception e) {
             e.printStackTrace();
         }

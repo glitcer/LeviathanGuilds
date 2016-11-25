@@ -1,51 +1,42 @@
 package me.khalit.projectleviathan.data.managers;
 
 import lombok.Getter;
+import lombok.NonNull;
 import me.khalit.projectleviathan.Main;
 import me.khalit.projectleviathan.data.Guild;
 import me.khalit.projectleviathan.data.Rank;
 import me.khalit.projectleviathan.data.User;
 import me.khalit.projectleviathan.utils.Serializer;
 
-import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GuildManager {
 
     @Getter
-    private static final List<Guild> guilds = new ArrayList<>();
+    private static final Map<String, Guild> guilds = new WeakHashMap<>();
 
+    @NonNull
     public static Guild getGuild(String tag) {
-        for (Guild guild : guilds) {
-            if (guild.getTag().toUpperCase().equals(tag.toUpperCase())) return guild;
-        }
-        return null;
+        return guilds.values().stream().filter(g -> g.getTag().toUpperCase().equals(tag.toLowerCase())).findFirst().orElse(null);
     }
 
+    @NonNull
     public static boolean existsTag(String tag) {
-        for (Guild guild : guilds) {
-            if (guild.getTag().toUpperCase().equals(tag.toUpperCase())) return true;
-        }
-        return false;
+        return guilds.values().stream().filter(g -> g.getTag().toUpperCase().equals(tag.toLowerCase())).findFirst().orElse(null) != null;
     }
 
+    @NonNull
     public static boolean existsName(String name) {
-        for (Guild guild : guilds) {
-            if (guild.getName().toUpperCase().equals(name.toUpperCase())) return true;
-        }
-        return false;
+        return guilds.values().stream().filter(g -> g.getName().toUpperCase().equals(name.toLowerCase())).findFirst().orElse(null) != null;
     }
 
+    @NonNull
     public static List<String> toStrings(List<Guild> guilds) {
         return guilds.stream().map(Guild::getTag).collect(Collectors.toList());
     }
 
+    @NonNull
     public static List<Guild> fromStrings(List<String> strings) {
         return strings.stream().map(GuildManager::getGuild).collect(Collectors.toList());
     }
@@ -72,10 +63,8 @@ public class GuildManager {
                     guild.setOccupied(result.getBoolean("occupied"));
                     guild.setTreasury(Serializer.deserializeInventory(result.getString("treasury")));
                     RankManager.update(guild);
-
+                    guilds.put(result.getString("tag"), guild);
                     guild.getMembers().forEach(member -> member.setGuild(guild));
-
-                    guilds.add(guild);
                 }
             });
         } catch (Exception e) {
