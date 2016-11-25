@@ -5,6 +5,7 @@ import lombok.NonNull;
 import me.khalit.projectleviathan.Main;
 import me.khalit.projectleviathan.data.Guild;
 import me.khalit.projectleviathan.data.Rank;
+import me.khalit.projectleviathan.data.User;
 import me.khalit.projectleviathan.utils.Serializer;
 
 import java.util.*;
@@ -62,8 +63,15 @@ public class GuildManager {
                     guild.setOccupied(result.getBoolean("occupied"));
                     guild.setTreasury(Serializer.deserializeInventory(result.getString("treasury")));
                     RankManager.update(guild);
+<<<<<<< HEAD
                     guilds.put(result.getString("tag"), guild);
                     guild.getMembers().forEach(member -> member.setGuild(guild));
+=======
+
+                    guild.getMembers().forEach(member -> member.setGuild(guild));
+
+                    guilds.add(guild);
+>>>>>>> 1152ca226e94eee49085dbd22ad571bded37e1a6
                 }
             });
         } catch (Exception e) {
