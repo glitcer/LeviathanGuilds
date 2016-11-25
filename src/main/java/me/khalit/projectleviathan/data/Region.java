@@ -10,9 +10,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 @lombok.Data
 public class Region implements Data, Removable {
 
@@ -41,7 +38,7 @@ public class Region implements Data, Removable {
 
     public boolean isNear(Location to) {
         if (center == null) return false;
-        for (Region region : RegionManager.getRegions()) {
+        for (Region region : RegionManager.getRegions().values()) {
             if (region.getCenter() == null) return false;
             if (!center.getWorld().equals(region.getCenter().getWorld())) return false;
 
@@ -66,13 +63,7 @@ public class Region implements Data, Removable {
     @Override
     public void delete() {
         try {
-            /*
-            PreparedStatement stmt = Main.getSqlHandler().getConnection().prepareStatement(
-                    "DELETE FROM `regions` WHERE `guild`=?");
-            stmt.setString(1, guild.getTag());
-            stmt.executeUpdate();
-            stmt.close();
-            */
+            Main.getSqlHandler().execute("DELETE FROM `regions` WHERE `guild`=" + guild.getTag() + "");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,18 +72,7 @@ public class Region implements Data, Removable {
     @Override
     public void save() {
         try {
-            /*
-            PreparedStatement stmt = Main.getSqlHandler().getConnection().prepareStatement(
-                    "UPDATE `regions` SET `guild`=?,`center`=?,`size`=?,`world`=?,`parent`=? WHERE `guild`=?");
-            stmt.setString(1, guild.getTag());
-            stmt.setString(2, Serializer.serializeLocation(center));
-            stmt.setInt(3, size);
-            stmt.setString(4, world.getName());
-            stmt.setString(5, guild.getTag());
-            stmt.setBoolean(6, parent);
-            stmt.executeUpdate();
-            stmt.close();
-            */
+            Main.getSqlHandler().execute("UPDATE `regions` SET `guild`=" + guild.getTag() + ", `center`=" + Serializer.serializeLocation(center) + ", `size`=" + size + ", `world`=" + world.getName() + ", `parent`=" + parent + " WHERE `guild`=" + guild + "");
         } catch (Exception e) {
             e.printStackTrace();
         }
