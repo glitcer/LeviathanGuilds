@@ -1,11 +1,15 @@
 package me.khalit.projectleviathan;
 
 import lombok.Getter;
-import me.khalit.projectleviathan.configuration.*;
+import me.khalit.projectleviathan.configuration.Locale;
+import me.khalit.projectleviathan.configuration.Messages;
+import me.khalit.projectleviathan.configuration.Settings;
+import me.khalit.projectleviathan.configuration.TabReader;
 import me.khalit.projectleviathan.data.managers.GuildManager;
 import me.khalit.projectleviathan.data.managers.RegionManager;
 import me.khalit.projectleviathan.data.managers.UserManager;
 import me.khalit.projectleviathan.data.sql.SQLHandler;
+import me.khalit.projectleviathan.api.Finder;
 import me.khalit.projectleviathan.listeners.PlayerJoinListener;
 import me.khalit.projectleviathan.utils.element.TabExecutor;
 import me.khalit.projectleviathan.utils.exceptions.MetricsException;
@@ -76,6 +80,17 @@ public class Main extends JavaPlugin {
         } catch (Exception e) {
             logger.severe("[MySQL] Server is not responding or credentials are wrong." +
                     " Check your MySQL credentials in config.yml file!");
+            setEnabled(false);
+            return;
+        }
+        try {
+            Finder finder = new Finder(this);
+            finder.findCommands();
+        }
+        catch (Exception ex) {
+            // TODO: normal error
+            ex.printStackTrace();
+            setEnabled(false);
             return;
         }
         logger.info("Registering listeners...");

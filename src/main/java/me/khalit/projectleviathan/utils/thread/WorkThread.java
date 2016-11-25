@@ -23,7 +23,7 @@ public class WorkThread extends Thread {
     }
 
     public void run() {
-        while (true) {
+        while (!isInterrupted()) {
             try {
                 List<Work> current = new ArrayList<>(works);
                 works.clear();
@@ -34,7 +34,7 @@ public class WorkThread extends Thread {
                     locker.wait();
                 }
             } catch (InterruptedException | WorkException e) {
-                e.printStackTrace();
+                // e.printStackTrace();
             }
         }
     }
