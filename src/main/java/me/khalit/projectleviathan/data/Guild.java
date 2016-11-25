@@ -10,8 +10,6 @@ import me.khalit.projectleviathan.utils.Serializer;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +37,7 @@ public class Guild implements Data, Removable {
     @Override
     public void save() {
         try {
+            /*
             PreparedStatement statement = Main.getSqlHandler().getConnection().prepareStatement(
                     "UPDATE guilds SET `tag`=?,`name`=?,`owner`=?,`members`=?,`kills`=?,`deaths`=?,`validity`=?,`protection`=?," +
                             "`born`=?,`allies`=?,`home`=?,`treasury`=?,`money`=?,`pvp`=?,`occupied`=?, WHERE tag=?");
@@ -59,7 +58,8 @@ public class Guild implements Data, Removable {
             statement.setString(15, tag);
             statement.executeUpdate();
             statement.close();
-        } catch (SQLException e) {
+            */
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -67,6 +67,7 @@ public class Guild implements Data, Removable {
     @Override
     public void insert() {
         try {
+            /*
             PreparedStatement statement = Main.getSqlHandler().getConnection().prepareStatement(
                     "INSERT INTO guilds VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             statement.setString(1, tag);
@@ -85,7 +86,8 @@ public class Guild implements Data, Removable {
             statement.setBoolean(14, occupied);
             statement.executeUpdate();
             statement.close();
-        } catch (SQLException e) {
+            */
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -93,12 +95,14 @@ public class Guild implements Data, Removable {
     @Override
     public void delete() {
         try {
+            /*
             PreparedStatement stmt = Main.getSqlHandler().getConnection().prepareStatement(
                     "DELETE FROM `guilds` WHERE `tag`=?");
             stmt.setString(1, tag);
             stmt.executeUpdate();
             stmt.close();
-        } catch (SQLException e) {
+            */
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

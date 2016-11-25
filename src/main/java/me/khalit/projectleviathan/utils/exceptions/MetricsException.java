@@ -1,7 +1,5 @@
 package me.khalit.projectleviathan.utils.exceptions;
 
-import me.khalit.projectleviathan.Metrics;
-
 public class MetricsException extends Exception {
 
     public MetricsException() {

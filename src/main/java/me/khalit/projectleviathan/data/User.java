@@ -2,7 +2,6 @@ package me.khalit.projectleviathan.data;
 
 import me.khalit.projectleviathan.Main;
 import me.khalit.projectleviathan.api.Data;
-import me.khalit.projectleviathan.configuration.ConfigurableFile;
 import me.khalit.projectleviathan.configuration.Locale;
 import me.khalit.projectleviathan.configuration.LocaleFile;
 import me.khalit.projectleviathan.data.managers.UserManager;
@@ -12,8 +11,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.UUID;
 
 @lombok.Data
@@ -67,17 +64,8 @@ public class User implements Data {
     @Override
     public void save() {
         try {
-            PreparedStatement statement = Main.getSqlHandler().getConnection().prepareStatement(
-                    "UPDATE users SET `locale`=?,`honor`=?,`points`=?,`kills`=?,`deaths`=? WHERE uuid=?");
-            statement.setString(1, Locale.localeByConfigurableFile(locale));
-            statement.setInt(2, honor);
-            statement.setInt(3, rank.getPoints());
-            statement.setInt(4, rank.getKills());
-            statement.setInt(5, rank.getDeaths());
-            statement.setString(6, uniqueId.toString());
-            statement.executeUpdate();
-            statement.close();
-        } catch (SQLException e) {
+            Main.getSqlHandler().execute("UPDATE users SET `locale`=" + Locale.localeByConfigurableFile(locale) + ", `honor`=" + honor + ", `points`=" + rank.getPoints() + ", `kills`=" + rank.getKills() + ", `deaths`=" + rank.getDeaths() + " WHERE `uuid`=" + uniqueId.toString());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -85,18 +73,8 @@ public class User implements Data {
     @Override
     public void insert() {
         try {
-            PreparedStatement statement = Main.getSqlHandler().getConnection().prepareStatement(
-                    "INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?)");
-            statement.setString(1, uniqueId.toString());
-            statement.setString(2, name);
-            statement.setString(3, Locale.localeByConfigurableFile(locale));
-            statement.setInt(4, honor);
-            statement.setInt(5, rank.getPoints());
-            statement.setInt(6, rank.getKills());
-            statement.setInt(7, rank.getDeaths());
-            statement.executeUpdate();
-            statement.close();
-        } catch (SQLException e) {
+            Main.getSqlHandler().execute("INSERT INTO users VALUES (" + uniqueId.toString() + "), " + name + ", " + Locale.localeByConfigurableFile(locale) + ", " + honor + ", " + rank.getPoints() + ", " + rank.getKills() + ", " + rank.getDeaths() + ")");
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

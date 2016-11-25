@@ -51,33 +51,30 @@ public class GuildManager {
 
     public static void loadGuilds() {
         try {
-            PreparedStatement stmt = Main.getSqlHandler().getConnection().prepareStatement(
-                    "SELECT * FROM guilds");
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                Guild guild = new Guild(rs.getString("tag"), rs.getString("name"));
-                Rank rank = new Rank(guild);
-                rank.setKills(rs.getInt("kills"));
-                rank.setDeaths(rs.getInt("deaths"));
-                guild.setAllies(GuildManager.fromStrings(Serializer.deserializeList(rs.getString("allies"))));
-                guild.setProtection(rs.getLong("attacked"));
-                guild.setRank(rank);
-                guild.setAllyInvites(new ArrayList<>());
-                guild.setBorn(rs.getLong("born"));
-                guild.setHome(Serializer.deserializeLocation(rs.getString("home")));
-                guild.setMembers(UserManager.fromStrings(Serializer.deserializeList(rs.getString("members"))));
-                guild.setOwner(UserManager.getUser(rs.getString("owner")));
-                guild.setPvp(rs.getBoolean("pvp"));
-                guild.setValidity(rs.getLong("validity"));
-                guild.setMoney(rs.getInt("money"));
-                guild.setOccupied(rs.getBoolean("occupied"));
-                guild.setTreasury(Serializer.deserializeInventory(rs.getString("treasury")));
-                RankManager.update(guild);
-                guilds.add(guild);
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException | IOException e) {
+            Main.getSqlHandler().query("SELECT * FROM guilds", result -> {
+                while (result.next()) {
+                    Guild guild = new Guild(result.getString("tag"), result.getString("name"));
+                    Rank rank = new Rank(guild);
+                    rank.setKills(result.getInt("kills"));
+                    rank.setDeaths(result.getInt("deaths"));
+                    guild.setAllies(GuildManager.fromStrings(Serializer.deserializeList(result.getString("allies"))));
+                    guild.setProtection(result.getLong("attacked"));
+                    guild.setRank(rank);
+                    guild.setAllyInvites(new ArrayList<>());
+                    guild.setBorn(result.getLong("born"));
+                    guild.setHome(Serializer.deserializeLocation(result.getString("home")));
+                    guild.setMembers(UserManager.fromStrings(Serializer.deserializeList(result.getString("members"))));
+                    guild.setOwner(UserManager.getUser(result.getString("owner")));
+                    guild.setPvp(result.getBoolean("pvp"));
+                    guild.setValidity(result.getLong("validity"));
+                    guild.setMoney(result.getInt("money"));
+                    guild.setOccupied(result.getBoolean("occupied"));
+                    guild.setTreasury(Serializer.deserializeInventory(result.getString("treasury")));
+                    RankManager.update(guild);
+                    guilds.add(guild);
+                }
+            });
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

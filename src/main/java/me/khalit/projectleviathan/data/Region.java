@@ -66,12 +66,14 @@ public class Region implements Data, Removable {
     @Override
     public void delete() {
         try {
+            /*
             PreparedStatement stmt = Main.getSqlHandler().getConnection().prepareStatement(
                     "DELETE FROM `regions` WHERE `guild`=?");
             stmt.setString(1, guild.getTag());
             stmt.executeUpdate();
             stmt.close();
-        } catch (SQLException e) {
+            */
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -79,6 +81,7 @@ public class Region implements Data, Removable {
     @Override
     public void save() {
         try {
+            /*
             PreparedStatement stmt = Main.getSqlHandler().getConnection().prepareStatement(
                     "UPDATE `regions` SET `guild`=?,`center`=?,`size`=?,`world`=?,`parent`=? WHERE `guild`=?");
             stmt.setString(1, guild.getTag());
@@ -89,7 +92,8 @@ public class Region implements Data, Removable {
             stmt.setBoolean(6, parent);
             stmt.executeUpdate();
             stmt.close();
-        } catch (SQLException e) {
+            */
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -97,6 +101,7 @@ public class Region implements Data, Removable {
     @Override
     public void insert() {
         try {
+            /*
             PreparedStatement stmt = Main.getSqlHandler().getConnection().prepareStatement(
                     "INSERT INTO `regions` (`guild`, `center`, `size`, `world`, `parent`) VALUES (?, ?, ?, ?, ?)");
             stmt.setString(1, guild.getTag());
@@ -106,7 +111,8 @@ public class Region implements Data, Removable {
             stmt.setBoolean(5, parent);
             stmt.executeUpdate();
             stmt.close();
-        } catch (SQLException e) {
+            */
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

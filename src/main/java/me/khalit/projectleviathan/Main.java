@@ -2,7 +2,6 @@ package me.khalit.projectleviathan;
 
 import lombok.Getter;
 import me.khalit.projectleviathan.configuration.*;
-import me.khalit.projectleviathan.data.User;
 import me.khalit.projectleviathan.data.managers.GuildManager;
 import me.khalit.projectleviathan.data.managers.RegionManager;
 import me.khalit.projectleviathan.data.managers.UserManager;
@@ -14,13 +13,10 @@ import me.khalit.projectleviathan.utils.runnables.AsyncTabHeavyRefreshTask;
 import me.khalit.projectleviathan.utils.runnables.AsyncTabLightRefreshTask;
 import me.khalit.projectleviathan.utils.runnables.TPSMonitor;
 import me.khalit.projectleviathan.utils.thread.WorkThread;
-import me.khalit.projectleviathan.utils.thread.WorkType;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.IOException;
 import java.util.logging.Logger;
 
 public class Main extends JavaPlugin {
@@ -30,13 +26,15 @@ public class Main extends JavaPlugin {
     @Getter
     private static SQLHandler sqlHandler;
 
+    private final WorkThread workThread = new WorkThread();
+
     private Logger logger;
 
     public void onLoad() {
         instance = this;
         logger = getLogger();
         logger.info("Initializing work thread...");
-        new WorkThread().start();
+        workThread.start();
     }
 
     public void onEnable() {
@@ -62,20 +60,18 @@ public class Main extends JavaPlugin {
         new Messages();
         logger.info("Scheduling runnables...");
         TPSMonitor.initialize();
-        Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new AsyncTabLightRefreshTask(), 20L, 20L);
-        Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new AsyncTabHeavyRefreshTask(), 20L, 3600L);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, new AsyncTabLightRefreshTask(), 20L, 20L);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, new AsyncTabHeavyRefreshTask(), 20L, 3600L);
         Bukkit.getScheduler().runTaskTimer(this, new TPSMonitor(), 1000L, 50L);
         logger.info("Executing tab...");
         TabExecutor.load();
         logger.info("Connecting to MySQL...");
         try {
-            sqlHandler = new SQLHandler(
-                    Settings.getString("mysql.host"),
+            sqlHandler = SQLHandler.createMySQL(Settings.getString("mysql.host"),
                     Settings.getInt("mysql.port"),
                     Settings.getString("mysql.user"),
                     Settings.getString("mysql.pass"),
                     Settings.getString("mysql.base"));
-            sqlHandler.getHikariConnector().connect();
             sqlHandler.createTables();
         } catch (Exception e) {
             logger.severe("[MySQL] Server is not responding or credentials are wrong." +
@@ -93,4 +89,8 @@ public class Main extends JavaPlugin {
         RegionManager.loadRegions();
     }
 
+    @Override
+    public void onDisable() {
+        workThread.interrupt();
+    }
 }

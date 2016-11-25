@@ -2,14 +2,10 @@ package me.khalit.projectleviathan.data.managers;
 
 import lombok.Getter;
 import me.khalit.projectleviathan.Main;
-import me.khalit.projectleviathan.data.Guild;
 import me.khalit.projectleviathan.data.Region;
 import me.khalit.projectleviathan.utils.Serializer;
 import org.bukkit.Location;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,25 +16,22 @@ public class RegionManager {
 
     public static void loadRegions() {
         try {
-            PreparedStatement stmt = Main.getSqlHandler().getConnection().prepareStatement(
-                    "SELECT * FROM regions");
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                Region region = new Region(rs.getString("guild"),
-                        Serializer.deserializeLocation(rs.getString("center")), rs.getInt("size"));
-                region.setParent(rs.getBoolean("parent"));
-                regions.add(region);
+            Main.getSqlHandler().query("SELECT * FROM regions", result -> {
+                while (result.next()) {
+                    Region region = new Region(result.getString("guild"),
+                            Serializer.deserializeLocation(result.getString("center")), result.getInt("size"));
+                    region.setParent(result.getBoolean("parent"));
+                    regions.add(region);
 
-                if (region.isParent()) {
-                    region.getGuild().getConqueredRegions().add(region);
+                    if (region.isParent()) {
+                        region.getGuild().getConqueredRegions().add(region);
+                    }
+                    else {
+                        region.getGuild().setRegion(region);
+                    }
                 }
-                else {
-                    region.getGuild().setRegion(region);
-                }
-            }
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
+            });
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

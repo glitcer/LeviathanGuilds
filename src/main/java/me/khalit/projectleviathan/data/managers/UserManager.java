@@ -30,25 +30,20 @@ public class UserManager {
 
     public static void loadUsers() {
         try {
-            PreparedStatement stmt = Main.getSqlHandler().getConnection().prepareStatement(
-                    "SELECT * FROM users");
-
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                User user = new User(rs.getString("name"), UUID.fromString(rs.getString("uuid")));
-                user.setLocale(Locale.fileByLocale(rs.getString("locale")));
-                user.setHonor(rs.getInt("honor"));
-                Rank rank = new Rank(user);
-                rank.setPoints(rs.getInt("points"));
-                rank.setKills(rs.getInt("kills"));
-                rank.setDeaths(rs.getInt("deaths"));
-                user.setRank(rank);
-                UserManager.getUsers().add(user);
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
+            Main.getSqlHandler().query("SELECT * FROM users", result -> {
+                while (result.next()) {
+                    User user = new User(result.getString("name"), UUID.fromString(result.getString("uuid")));
+                    user.setLocale(Locale.fileByLocale(result.getString("locale")));
+                    user.setHonor(result.getInt("honor"));
+                    Rank rank = new Rank(user);
+                    rank.setPoints(result.getInt("points"));
+                    rank.setKills(result.getInt("kills"));
+                    rank.setDeaths(result.getInt("deaths"));
+                    user.setRank(rank);
+                    UserManager.getUsers().add(user);
+                }
+            });
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
