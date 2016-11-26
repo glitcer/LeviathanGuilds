@@ -7,6 +7,8 @@ import me.khalit.projectleviathan.utils.reflection.Reflection;
 import me.khalit.projectleviathan.utils.reflection.packet.PacketInjector;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -30,8 +32,18 @@ public class ActionBarPacket1_11 implements ActionBar {
 
     @Override
     public void send(Player player, String content, int ticks) {
-        Bukkit.getScheduler().runTaskLaterAsynchronously(
-                Main.getInstance(), () -> send(player, content), ticks);
+        final int[] timeLeft = {ticks};
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                timeLeft[0] -= 20L;
+                send(player, content);
+
+                if (timeLeft[0] <= 0) {
+                    cancel();
+                }
+            }
+        }.runTaskTimerAsynchronously(Main.getInstance(), 0, 20);
     }
 
     @Override
@@ -41,8 +53,18 @@ public class ActionBarPacket1_11 implements ActionBar {
 
     @Override
     public void send(String content, int ticks) {
-        Bukkit.getScheduler().runTaskLaterAsynchronously(
-                Main.getInstance(), () -> send(content), ticks);
+        final int[] timeLeft = {ticks};
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                timeLeft[0] -= 20L;
+                send(content);
+
+                if (timeLeft[0] <= 0) {
+                    cancel();
+                }
+            }
+        }.runTaskTimerAsynchronously(Main.getInstance(), 0, 20);
     }
 
     @Override
