@@ -11,6 +11,7 @@ import me.khalit.projectleviathan.data.managers.UserManager;
 import me.khalit.projectleviathan.data.sql.SQLHandler;
 import me.khalit.projectleviathan.api.Finder;
 import me.khalit.projectleviathan.listeners.PlayerJoinListener;
+import me.khalit.projectleviathan.utils.reflection.Reflection;
 import me.khalit.projectleviathan.utils.reflection.TabExecutor;
 import me.khalit.projectleviathan.utils.exceptions.MetricsException;
 import me.khalit.projectleviathan.utils.reflection.packet.GuildEntity;
@@ -30,8 +31,6 @@ public class Main extends JavaPlugin {
     private static Main instance;
     @Getter
     private static SQLHandler sqlHandler;
-    @Getter
-    private GuildEntity packetEntity;
 
     private final WorkThread workThread = new WorkThread();
 
@@ -65,7 +64,7 @@ public class Main extends JavaPlugin {
         TabReader.loadConfiguration();
         new Settings();
         new Messages();
-        packetEntity = new GuildEntity(Settings.getString("classPathEntity"));
+        GuildEntity.initialize();
         logger.info("Scheduling runnables...");
         TPSMonitor.initialize();
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, new AsyncTabLightRefreshTask(), 20L, 20L);

@@ -11,25 +11,29 @@ import java.util.Map;
 
 public class GuildHologram {
 
-    private final Map<Guild, Hologram> hologramMap = new HashMap<>();
+    private static final Map<Guild, Hologram> hologramMap = new HashMap<>();
 
-    public void spawn(Player... players) {
-        GuildManager.getGuilds().values().forEach(this::spawn);
+    public static void spawn(Player... players) {
+        GuildManager.getGuilds().values().forEach(GuildHologram::spawn);
     }
 
-    public void spawn(Guild guild) {
+    public static void spawn(Guild guild) {
         getHologram(guild).show(
                 guild.getRegion().getCenter().add(0, 1.5, 0));
     }
 
-    public void destroy(Guild guild) {
+    public static void destroy(Guild guild) {
         Hologram hologram = getHologram(guild);
         hologramMap.remove(guild);
         hologram.destroy();
     }
 
-    private Hologram getHologram(Guild guild) {
-        Object packet;
+    public static void update(Guild guild) {
+        Hologram hologram = getHologram(guild);
+        hologram.change("&6" + guild.getTag(), "&4Health: &c823 &lHP"); // updating existing holograms
+    }
+
+    private static Hologram getHologram(Guild guild) {
         if (!hologramMap.containsKey(guild)) {
             Hologram hologram = ProtocolManager.getHologram();
             hologram.set("&6" + guild.getTag(), "&4Health: &c1000 &lHP"); // test

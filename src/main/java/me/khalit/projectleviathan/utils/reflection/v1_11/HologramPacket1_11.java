@@ -72,7 +72,7 @@ public class HologramPacket1_11 implements Hologram {
     @Override
     public void show(Location location, long ticks) {
         show(location);
-        Bukkit.getScheduler().runTaskLater(Main.getInstance(), this::destroy, ticks);
+        Bukkit.getScheduler().runTaskLaterAsynchronously(Main.getInstance(), this::destroy, ticks);
     }
 
     @Override
