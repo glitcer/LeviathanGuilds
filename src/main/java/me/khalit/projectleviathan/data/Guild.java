@@ -2,6 +2,7 @@ package me.khalit.projectleviathan.data;
 
 import me.khalit.projectleviathan.Main;
 import me.khalit.projectleviathan.api.Data;
+import me.khalit.projectleviathan.api.Hologram;
 import me.khalit.projectleviathan.api.Removable;
 import me.khalit.projectleviathan.configuration.Locale;
 import me.khalit.projectleviathan.data.managers.GuildManager;

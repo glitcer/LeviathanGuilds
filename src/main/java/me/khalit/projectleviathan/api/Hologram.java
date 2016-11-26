@@ -13,6 +13,6 @@ public interface Hologram {
     Hologram change(String... lines);
     void show(Location location);
     void show(Location location, long ticks);
-    List<ArmorStand> display(Location location, String content);
+    List<Integer> display(Location location, String content);
     void destroy();
 }

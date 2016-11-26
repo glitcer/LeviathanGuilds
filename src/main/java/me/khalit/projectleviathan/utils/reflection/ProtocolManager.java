@@ -2,11 +2,9 @@ package me.khalit.projectleviathan.utils.reflection;
 
 import me.khalit.projectleviathan.api.Hologram;
 import me.khalit.projectleviathan.api.TabPacket;
-import me.khalit.projectleviathan.utils.reflection.v1_11.Hologram1_11;
+import me.khalit.projectleviathan.utils.reflection.v1_11.HologramPacket1_11;
 import me.khalit.projectleviathan.utils.reflection.v1_11.TabPacket1_11;
 import me.khalit.projectleviathan.utils.reflection.v1_9.TabPacket1_9;
-
-import java.lang.ref.Reference;
 
 public class ProtocolManager {
 
@@ -29,6 +27,6 @@ public class ProtocolManager {
     }
 
     public static Hologram getHologram() {
-        return new Hologram1_11(); // not sure what errors are on each version, tested on 1.11
+        return new HologramPacket1_11(); // not sure what errors are on each version, tested on 1.11
     }
 }

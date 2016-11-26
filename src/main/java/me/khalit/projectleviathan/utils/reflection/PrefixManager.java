@@ -22,7 +22,7 @@ public class PrefixManager {
         Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
         User u = UserManager.getUser(p);
         Guild g = u.getGuild();
-        for (Guild o : GuildManager.getGuilds()) {
+        for (Guild o : GuildManager.getGuilds().values()) {
             Team t = sb.getTeam(o.getTag());
             if (t == null) {
                 t = sb.registerNewTeam(o.getTag());

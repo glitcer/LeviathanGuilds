@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PacketEntity {
+public class GuildEntity {
 
     private final Map<Integer, Object> entityIds = new HashMap<>();
     private final Map<Guild, KeyPair<Integer, Object>> entityMap = new HashMap<>();
@@ -26,7 +26,7 @@ public class PacketEntity {
     private Method getIdMethod;
     private Class<?> entityClassPath;
 
-    public PacketEntity(String classPathEntity) {
+    public GuildEntity(String classPathEntity) {
         if (!classPathEntity.contains("Entity")) {
             classPathEntity = "Entity" + classPathEntity;
         }
@@ -72,7 +72,7 @@ public class PacketEntity {
     }
 
     public void spawn(Player... players) {
-        GuildManager.getGuilds().forEach(guild ->
+        GuildManager.getGuilds().values().forEach(guild ->
                 PacketInjector.sendPacket(players, getPacket(guild)));
     }
 
