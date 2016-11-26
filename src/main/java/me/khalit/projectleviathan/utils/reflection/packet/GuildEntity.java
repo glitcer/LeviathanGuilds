@@ -28,7 +28,7 @@ public class GuildEntity {
     private static Class<?> entityClassPath;
 
     public static void initialize() {
-        String classPathEntity = Settings.getString("entityClassPath");
+        String classPathEntity = Settings.getString("classPathEntity");
         if (!classPathEntity.contains("Entity")) {
             classPathEntity = "Entity" + classPathEntity;
         }

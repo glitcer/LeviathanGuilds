@@ -3,11 +3,14 @@ package me.khalit.projectleviathan.utils.reflection;
 import me.khalit.projectleviathan.api.ActionBar;
 import me.khalit.projectleviathan.api.Hologram;
 import me.khalit.projectleviathan.api.TabPacket;
+import me.khalit.projectleviathan.api.Title;
 import me.khalit.projectleviathan.utils.reflection.v1_11.ActionBarPacket1_11;
 import me.khalit.projectleviathan.utils.reflection.v1_11.HologramPacket1_11;
 import me.khalit.projectleviathan.utils.reflection.v1_11.TabPacket1_11;
+import me.khalit.projectleviathan.utils.reflection.v1_11.Title1_11;
 import me.khalit.projectleviathan.utils.reflection.v1_8.ActionBarPacket1_8;
 import me.khalit.projectleviathan.utils.reflection.v1_9.TabPacket1_9;
+import me.khalit.projectleviathan.utils.reflection.v1_9.Title1_9;
 
 public class ProtocolManager {
 
@@ -39,8 +42,22 @@ public class ProtocolManager {
             else if (version.contains("8")) {
                 actionBar = new ActionBarPacket1_8();
             }
+            else {
+                actionBar = new ActionBarPacket1_11();
+            }
         }
         return actionBar;
+    }
+
+    public static Title getTitle() {
+        String version = Reflection.getVersion();
+        if (version.contains("10") || version.contains("11")) {
+            return new Title1_11();
+        }
+        else if (version.contains("9") || version.contains("8")) {
+            return new Title1_9();
+        }
+        return new Title1_11();
     }
 
     public static Hologram getHologram() {

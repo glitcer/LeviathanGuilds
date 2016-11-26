@@ -16,14 +16,14 @@ import java.util.List;
 
 public class TabPacket1_11 implements TabPacket {
 
-    private final Class<?> PACKET_PLAY_OUT_PLAYER_INFO = Reflection.getCraftClass("PacketPlayOutPlayerInfo");
-    private final Class<?> PACKET_PLAY_OUT_PLAYER_LIST_HEADER_FOOTER = Reflection.getCraftClass("PacketPlayOutPlayerListHeaderFooter");
-    private final Class<?> PACKET_PLAY_OUT_PLAYER_INFO$ENUM_PLAYER_INFO_ACTION = Reflection.getCraftClass("PacketPlayOutPlayerInfo$EnumPlayerInfoAction");
-    private final Class<?> PACKET_PLAY_OUT_PLAYER_INFO$PLAYER_INFO_DATA = Reflection.getCraftClass("PacketPlayOutPlayerInfo$PlayerInfoData");
-    private final Class<?> ICHAT_BASE_COMPONENT = Reflection.getCraftClass("IChatBaseComponent");
-    private final Class<?> ICHAT_BASE_COMPONENT$CHAT_SERIALIZER = Reflection.getCraftClass("IChatBaseComponent$ChatSerializer");
-    private Class<?> ENUM_GAMEMODE = Reflection.getCraftClass("EnumGamemode");
-    private final Object PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR =
+    private static final Class<?> PACKET_PLAY_OUT_PLAYER_INFO = Reflection.getCraftClass("PacketPlayOutPlayerInfo");
+    private static final Class<?> PACKET_PLAY_OUT_PLAYER_LIST_HEADER_FOOTER = Reflection.getCraftClass("PacketPlayOutPlayerListHeaderFooter");
+    private static final Class<?> PACKET_PLAY_OUT_PLAYER_INFO$ENUM_PLAYER_INFO_ACTION = Reflection.getCraftClass("PacketPlayOutPlayerInfo$EnumPlayerInfoAction");
+    private static final Class<?> PACKET_PLAY_OUT_PLAYER_INFO$PLAYER_INFO_DATA = Reflection.getCraftClass("PacketPlayOutPlayerInfo$PlayerInfoData");
+    private static final Class<?> ICHAT_BASE_COMPONENT = Reflection.getCraftClass("IChatBaseComponent");
+    private static final Class<?> ICHAT_BASE_COMPONENT$CHAT_SERIALIZER = Reflection.getCraftClass("IChatBaseComponent$ChatSerializer");
+    private static Class<?> ENUM_GAMEMODE = Reflection.getCraftClass("EnumGamemode");
+    private static final Object PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR =
             Reflection.getConstructor(PACKET_PLAY_OUT_PLAYER_INFO);
 
     public TabPacket1_11() { }

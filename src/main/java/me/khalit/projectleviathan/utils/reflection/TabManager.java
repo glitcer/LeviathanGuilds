@@ -30,7 +30,7 @@ public class TabManager {
 
             String str = TabReader.getSlots().get(slot) == null ? "" : TabReader.getSlots().get(slot);
             TabExecutor.update(player, row, column,
-                    replaceVariables(player, str));
+                    str == null ? "" :  replaceVariables(player, str));
         }
         TabExecutor.execute(player);
     }
@@ -103,7 +103,7 @@ public class TabManager {
         string = StringUtils.replace(string, "{WORLD}", player.getWorld().getName());
         string = StringUtils.replace(string, "{ONLINE}", String.valueOf(Bukkit.getOnlinePlayers().size()));
         string = StringUtils.replace(string, "{TPS}", String.valueOf(TPSMonitor.getTPS()));
-        string = StringUtils.replace(string, "{PING}", String.valueOf(user.getPing()));
+        //string = StringUtils.replace(string, "{PING}", String.valueOf(user.getPing()));
         return Util.fixColors(string);
     }
 

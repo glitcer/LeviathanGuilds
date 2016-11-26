@@ -19,20 +19,20 @@ import java.util.List;
 
 public class HologramPacket1_11 implements Hologram {
 
-    private final Class<?> entityClass = Reflection.getCraftClass("Entity");
-    private final Class<?> packetPlayOutSpawnEntityClass = Reflection.getCraftClass("PacketPlayOutSpawnEntity");
-    private final Class<?> packetPlayOutEntityDestroyClass = Reflection.getCraftClass("PacketPlayOutEntityDestroy");
-    private final Class<?> worldClass = Reflection.getCraftClass("World");
-    private final Class<?> entityClassPath = Reflection.getCraftClass("EntityArmorStand");
-    private final Method setLocationMethod = Reflection.getMethod(entityClassPath, "setLocation");
-    private final Method setCustomNameVisibleMethod = Reflection.getMethod(entityClassPath, "setCustomNameVisible");
-    private final Method setCustomNameMethod = Reflection.getMethod(entityClassPath, "setCustomName");
-    private final Method setGravityMethod = Reflection.getMethod(entityClassPath, "setGravity");
-    private final Method setRemoveWhenFarawayMethod = Reflection.getMethod(entityClassPath, "setRemoveWhenFarAway");
-    private final Method setInvulnerableMethod = Reflection.getMethod(entityClassPath, "setInvulnerable");
-    private final Method setMarkerMethod = Reflection.getMethod(entityClassPath, "setMarker");
-    private final Method setVisibleMethod = Reflection.getMethod(entityClassPath, "setVisible");
-    private final Method getIdMethod = Reflection.getMethod(entityClassPath, "getId");
+    private static final Class<?> entityClass = Reflection.getCraftClass("Entity");
+    private static final Class<?> packetPlayOutSpawnEntityClass = Reflection.getCraftClass("PacketPlayOutSpawnEntity");
+    private static final Class<?> packetPlayOutEntityDestroyClass = Reflection.getCraftClass("PacketPlayOutEntityDestroy");
+    private static final Class<?> worldClass = Reflection.getCraftClass("World");
+    private static final Class<?> entityClassPath = Reflection.getCraftClass("EntityArmorStand");
+    private static final Method setLocationMethod = Reflection.getMethod(entityClassPath, "setLocation");
+    private static final Method setCustomNameVisibleMethod = Reflection.getMethod(entityClassPath, "setCustomNameVisible");
+    private static final Method setCustomNameMethod = Reflection.getMethod(entityClassPath, "setCustomName");
+    private static final Method setGravityMethod = Reflection.getMethod(entityClassPath, "setGravity");
+    private static final Method setRemoveWhenFarawayMethod = Reflection.getMethod(entityClassPath, "setRemoveWhenFarAway");
+    private static final Method setInvulnerableMethod = Reflection.getMethod(entityClassPath, "setInvulnerable");
+    private static final Method setMarkerMethod = Reflection.getMethod(entityClassPath, "setMarker");
+    private static final Method setVisibleMethod = Reflection.getMethod(entityClassPath, "setVisible");
+    private static final Method getIdMethod = Reflection.getMethod(entityClassPath, "getId");
 
     @Getter
     private boolean showing = false;
@@ -82,14 +82,18 @@ public class HologramPacket1_11 implements Hologram {
             Object armorStand = entityClassPath.getConstructor(worldClass).newInstance(world);
             Constructor packetPlayOutSpawn = packetPlayOutSpawnEntityClass.getConstructor(entityClass, int.class);
 
-            setLocationMethod.invoke(armorStand, location.add(0, 0.23, 0));
+            setLocationMethod.invoke(armorStand,
+                    location.getBlockX(),
+                    location.getBlockY() + 0.23,
+                    location.getBlockZ(),
+                    0, 0);
             setCustomNameMethod.invoke(armorStand, content);
             setCustomNameVisibleMethod.invoke(armorStand, true);
-            setVisibleMethod.invoke(armorStand, false);
-            setRemoveWhenFarawayMethod.invoke(armorStand, false);
-            setMarkerMethod.invoke(armorStand, true);
-            setInvulnerableMethod.invoke(armorStand, true);
-            setGravityMethod.invoke(armorStand, false);
+            //setVisibleMethod.invoke(armorStand, false);
+            //setRemoveWhenFarawayMethod.invoke(armorStand, false);
+           // setMarkerMethod.invoke(armorStand, true);
+            //setInvulnerableMethod.invoke(armorStand, true);
+            //setGravityMethod.invoke(armorStand, false);
 
             Object packet = packetPlayOutSpawn.newInstance(armorStand, 30);
             PacketInjector.sendPacket(packet);

@@ -1,6 +1,7 @@
 package me.khalit.projectleviathan.listeners;
 
 import me.khalit.projectleviathan.api.Hologram;
+import me.khalit.projectleviathan.api.Title;
 import me.khalit.projectleviathan.configuration.Locale;
 import me.khalit.projectleviathan.data.Rank;
 import me.khalit.projectleviathan.data.User;
@@ -22,9 +23,13 @@ public class PlayerJoinListener implements Listener {
         Player player = e.getPlayer();
         User user = UserManager.getFreshUser(player);
 
-        Hologram hologram = ProtocolManager.getHologram();
-        hologram.set("&kiefwiefhwiehfiwefhw", "&6Linia 1", "&cLinia 2", "&kiefwiefhwiehfiwefhw");
-        hologram.show(player.getLocation(), 150);
+        ProtocolManager.getTitle()
+                .setTitle("&9&lLeviathan&3&lGuilds")
+                .setSubtitle("&3Part of the &lLeviathanProject")
+                .setFadeIn(20)
+                .setFadeOut(20)
+                .setStay(80)
+                .show(player);
 
         // delegate custom work test
         //WorkThread.work(() -> player.sendMessage("Custom Multi-threaded Work -> Test"));
@@ -45,5 +50,9 @@ public class PlayerJoinListener implements Listener {
             //WorkThread.work(WorkType.USER_INSERT, user);
             //UserManager.getUsers().add(user);
         }
+
+        Hologram hologram = ProtocolManager.getHologram();
+        hologram.set("&kiefwiefhwiehfiwefhw", "&6Linia 1", "&cLinia 2", "&kiefwiefhwiehfiwefhw");
+        hologram.show(player.getLocation(), 150);
     }
 }
