@@ -90,7 +90,6 @@ public class Reflection {
         }
         return null;
     }
-
     public static Method getMethod(Class<?> cl, String method) {
         for (Method m : cl.getMethods()) {
             if (m.getName().equals(method)) {

@@ -3,10 +3,12 @@ package me.khalit.projectleviathan.utils.reflection.v1_11;
 import com.mojang.authlib.GameProfile;
 import me.khalit.projectleviathan.api.TabPacket;
 import me.khalit.projectleviathan.utils.Util;
+import me.khalit.projectleviathan.utils.reflection.ModernReflection;
 import me.khalit.projectleviathan.utils.reflection.Reflection;
 import me.khalit.projectleviathan.utils.reflection.packet.PacketInjector;
 import org.bukkit.entity.Player;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -24,51 +26,56 @@ public class TabPacket1_11 implements TabPacket {
     private static final Class<?> ICHAT_BASE_COMPONENT$CHAT_SERIALIZER = Reflection.getCraftClass("IChatBaseComponent$ChatSerializer");
     private static Class<?> ENUM_GAMEMODE = Reflection.getCraftClass("EnumGamemode");
     private static final Object PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR =
-            Reflection.getConstructor(PACKET_PLAY_OUT_PLAYER_INFO);
+            ModernReflection.getConstructor(PACKET_PLAY_OUT_PLAYER_INFO);
+    private static final Field aRaw = Reflection.getField(PACKET_PLAY_OUT_PLAYER_INFO, "a");
+    private static final Field bRaw = Reflection.getField(PACKET_PLAY_OUT_PLAYER_INFO, "b");
+    private static final MethodHandle aBuild = ModernReflection.getMethod(
+            ICHAT_BASE_COMPONENT$CHAT_SERIALIZER, ICHAT_BASE_COMPONENT, "a", false, String.class);
+
+    private MethodHandle a;
+    private MethodHandle b;
 
     public TabPacket1_11() { }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void sendPacket(Player player, GameProfile gp, String slot, String mode) {
-        Object cons = Reflection.getConstructor(PACKET_PLAY_OUT_PLAYER_INFO);
-        Field a = Reflection.getField(PACKET_PLAY_OUT_PLAYER_INFO, "a");
-        Field b = Reflection.getField(PACKET_PLAY_OUT_PLAYER_INFO, "b");
+        if (a == null) {
+            aRaw.setAccessible(true);
+            a = ModernReflection.getField(aRaw, false);
+        }
+        if (b == null) {
+            bRaw.setAccessible(true);
+            b = ModernReflection.getField(bRaw, false);
+        }
 
         try {
-            if (a != null) {
-                a.setAccessible(true);
-                if (PACKET_PLAY_OUT_PLAYER_INFO$ENUM_PLAYER_INFO_ACTION != null) {
-                    a.set(cons, Enum.valueOf((Class<Enum>) PACKET_PLAY_OUT_PLAYER_INFO$ENUM_PLAYER_INFO_ACTION, mode));
-                }
-            }
-        } catch (IllegalArgumentException | IllegalAccessException e) {
-            e.printStackTrace();
+            a.invokeExact(Enum.valueOf((Class<Enum>) PACKET_PLAY_OUT_PLAYER_INFO$ENUM_PLAYER_INFO_ACTION, mode));
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
 
         List<Object> ppi = new ArrayList<>();
         ppi.add(getPlayerInfo(gp, slot));
 
         try {
-            if (b != null) {
-                b.setAccessible(true);
-                b.set(cons, ppi);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            b.invokeExact(ppi);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
 
-        PacketInjector.sendPacket(player, cons);
+        PacketInjector.sendPacket(player, PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR);
     }
 
 
     public void sendPacketHeaderFooter(Player player, String header, String footer) {
-        Object cons = Reflection.getConstructor(PACKET_PLAY_OUT_PLAYER_LIST_HEADER_FOOTER);
-        Field a = Reflection.getField(PACKET_PLAY_OUT_PLAYER_LIST_HEADER_FOOTER, "a");
-        Field b = Reflection.getField(PACKET_PLAY_OUT_PLAYER_LIST_HEADER_FOOTER, "b");
-        assert a != null;
-        a.setAccessible(true);
-        assert b != null;
-        b.setAccessible(true);
+        if (a == null) {
+            aRaw.setAccessible(true);
+            a = ModernReflection.getField(aRaw, false);
+        }
+        if (b == null) {
+            bRaw.setAccessible(true);
+            b = ModernReflection.getField(bRaw, false);
+        }
 
         Object headerContent = null;
         Object footerContent = null;
@@ -79,14 +86,13 @@ public class TabPacket1_11 implements TabPacket {
             e.printStackTrace();
         }
 
-
         try {
-            a.set(cons, headerContent);
-            b.set(cons, footerContent);
-        } catch (IllegalArgumentException | IllegalAccessException e) {
-            e.printStackTrace();
+            a.invokeExact(headerContent);
+            b.invokeExact(footerContent);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
-        PacketInjector.sendPacket(player, cons);
+        PacketInjector.sendPacket(player, PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -119,15 +125,10 @@ public class TabPacket1_11 implements TabPacket {
     }
 
     public Object build(String content) {
-        Method method = Reflection.getTypedMethod(
-                ICHAT_BASE_COMPONENT$CHAT_SERIALIZER, "a",
-                ICHAT_BASE_COMPONENT, String.class);
-
         try {
-            assert method != null;
-            return method.invoke(null, content);
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            e.printStackTrace();
+            return aBuild.invokeExact(content);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
         return null;
     }

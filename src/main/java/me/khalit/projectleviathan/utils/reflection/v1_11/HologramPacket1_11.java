@@ -82,6 +82,7 @@ public class HologramPacket1_11 implements Hologram {
             Object armorStand = entityClassPath.getConstructor(worldClass).newInstance(world);
             Constructor packetPlayOutSpawn = packetPlayOutSpawnEntityClass.getConstructor(entityClass, int.class);
 
+            // under construction ;/
             setLocationMethod.invoke(armorStand,
                     location.getBlockX(),
                     location.getBlockY() + 0.23,

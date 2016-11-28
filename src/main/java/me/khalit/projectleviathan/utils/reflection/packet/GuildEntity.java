@@ -4,10 +4,12 @@ import me.khalit.projectleviathan.configuration.Settings;
 import me.khalit.projectleviathan.data.Guild;
 import me.khalit.projectleviathan.data.managers.GuildManager;
 import me.khalit.projectleviathan.utils.KeyPair;
+import me.khalit.projectleviathan.utils.reflection.ModernReflection;
 import me.khalit.projectleviathan.utils.reflection.Reflection;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -23,8 +25,8 @@ public class GuildEntity {
     private static final Class<?> packetPlayOutEntityDestroyClass = Reflection.getCraftClass("PacketPlayOutEntityDestroy");
     private static final Class<?> worldClass = Reflection.getCraftClass("World");
 
-    private static Method setLocationMethod;
-    private static Method getIdMethod;
+    private static MethodHandle setLocationMethod;
+    private static MethodHandle getIdMethod;
     private static Class<?> entityClassPath;
 
     public static void initialize() {
@@ -34,8 +36,8 @@ public class GuildEntity {
         }
         GuildEntity.entityClassPath = Reflection.getCraftClass(classPathEntity);
 
-        setLocationMethod = Reflection.getMethod(entityClassPath, "setLocation");
-        getIdMethod = Reflection.getMethod(entityClassPath, "getId");
+        setLocationMethod = ModernReflection.getMethod(entityClassPath, "setLocation", false);
+        getIdMethod = ModernReflection.getMethod(entityClassPath, int.class, "getId", false);
     }
 
     private static Object getDestroyPacket(int id) {
@@ -57,19 +59,19 @@ public class GuildEntity {
             Object crystal = entityClassPath.getConstructor(worldClass).newInstance(world);
             Constructor packetPlayOutSpawn = packetPlayOutSpawnEntityClass.getConstructor(entityClass, int.class);
 
-            setLocationMethod.invoke(crystal,
+            setLocationMethod.invokeExact(
                     location.getBlockX() + 0.50,
                     location.getBlockY(),
                     location.getBlockZ() + 0.50,
                     0, 0);
             Object packet = packetPlayOutSpawn.newInstance(crystal, 51);
 
-            int id = (int) getIdMethod.invoke(crystal);
+            int id = (int) getIdMethod.invokeExact();
 
             entityIds.put(id, packet);
             return new KeyPair<>(id, packet);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
         return null;
     }
