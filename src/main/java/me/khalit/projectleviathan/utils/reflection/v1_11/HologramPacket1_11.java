@@ -89,11 +89,11 @@ public class HologramPacket1_11 implements Hologram {
                     0, 0);
             setCustomNameMethod.invoke(armorStand, content);
             setCustomNameVisibleMethod.invoke(armorStand, true);
-            //setVisibleMethod.invoke(armorStand, false);
-            //setRemoveWhenFarawayMethod.invoke(armorStand, false);
-           // setMarkerMethod.invoke(armorStand, true);
-            //setInvulnerableMethod.invoke(armorStand, true);
-            //setGravityMethod.invoke(armorStand, false);
+            setVisibleMethod.invoke(armorStand, false);
+            setRemoveWhenFarawayMethod.invoke(armorStand, false);
+            setMarkerMethod.invoke(armorStand, true);
+            setInvulnerableMethod.invoke(armorStand, true);
+            setGravityMethod.invoke(armorStand, false);
 
             Object packet = packetPlayOutSpawn.newInstance(armorStand, 30);
             PacketInjector.sendPacket(packet);

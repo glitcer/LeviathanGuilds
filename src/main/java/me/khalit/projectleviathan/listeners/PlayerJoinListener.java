@@ -6,6 +6,7 @@ import me.khalit.projectleviathan.configuration.Locale;
 import me.khalit.projectleviathan.data.Rank;
 import me.khalit.projectleviathan.data.User;
 import me.khalit.projectleviathan.data.managers.UserManager;
+import me.khalit.projectleviathan.utils.reflection.CustomBoard;
 import me.khalit.projectleviathan.utils.reflection.PrefixManager;
 import me.khalit.projectleviathan.utils.reflection.ProtocolManager;
 import me.khalit.projectleviathan.utils.reflection.packet.NettyManager;
@@ -22,6 +23,13 @@ public class PlayerJoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         User user = UserManager.getFreshUser(player);
+
+        new CustomBoard("&6Test")
+                .addCell("&aTest cell")
+                .addCell("&eTest cell 2")
+                .addCell("&eTest cell score:7", 7)
+                .build()
+                .send(player);
 
         ProtocolManager.getTitle()
                 .setTitle("&9&lLeviathan&3&lGuilds")

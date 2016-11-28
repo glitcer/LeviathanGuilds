@@ -21,16 +21,17 @@ public class PrefixManager {
     public static void register(Player p) {
         Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
         User u = UserManager.getUser(p);
-        Guild g = u.getGuild() == null ? null : u.getGuild();
         for (Guild o : GuildManager.getGuilds().values()) {
             Team t = sb.getTeam(o.getTag());
             if (t == null) {
                 t = sb.registerNewTeam(o.getTag());
             }
-            if (g == null) {
+            if (!u.hasGuild()) {
                 t.setPrefix(parse(Settings.getString("prefixes.enemy"), o));
+                continue;
             }
-            else if (g.getTag().equals(o.getTag())) {
+            Guild g = u.getGuild();
+            if (g.getTag().equals(o.getTag())) {
                 t.setPrefix(parse(Settings.getString("prefixes.friendly"), o));
             }
             else if (o.getAllies().contains(g)) {
@@ -49,8 +50,9 @@ public class PrefixManager {
         }
         p.setScoreboard(sb);
         for (Player online : Bukkit.getOnlinePlayers()) {
+            Guild guild = u.hasGuild() ? u.getGuild() : null;
             online.getScoreboard()
-                    .getTeam(g != null ? g.getTag() : "noguild").addPlayer(p);
+                    .getTeam(guild != null ? guild.getTag() : "noguild").addPlayer(p);
 
             User onlineUser = UserManager.getUser(online);
             Guild onlineGuild = onlineUser.getGuild();

@@ -6,6 +6,7 @@ import me.khalit.projectleviathan.api.commands.annotations.Aliases;
 import me.khalit.projectleviathan.api.commands.annotations.Name;
 import me.khalit.projectleviathan.api.commands.annotations.Permission;
 import me.khalit.projectleviathan.utils.Util;
+import me.khalit.projectleviathan.utils.reflection.ClassFinder;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.SimplePluginManager;
@@ -18,9 +19,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Set;
 
-public class Finder {
-
-    private final Reflections reflections;
+public class CommandFinder {
 
     private static CommandMap commandMap;
 
@@ -35,18 +34,11 @@ public class Finder {
         }
     }
 
-    public Finder(@NonNull JavaPlugin javaPlugin) throws Exception {
-        ConfigurationBuilder config = new ConfigurationBuilder();
-        config.setClassLoaders(new ClassLoader[]{ javaPlugin.getClass().getClassLoader() });
-        config.addUrls(javaPlugin.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().toURL());
-        this.reflections = new Reflections(config);
-    }
-
-    public void findCommands() throws Exception {
+    public static void findCommands() throws Exception {
         if (commandMap == null) {
             return;
         }
-        Set<Class<? extends Command>> classes = this.reflections.getSubTypesOf(Command.class);
+        Set<Class<? extends Command>> classes = ClassFinder.getReflections().getSubTypesOf(Command.class);
         if (classes.size() == 0) {
             return;
         }

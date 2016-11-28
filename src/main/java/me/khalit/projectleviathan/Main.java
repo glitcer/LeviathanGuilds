@@ -9,9 +9,9 @@ import me.khalit.projectleviathan.data.managers.GuildManager;
 import me.khalit.projectleviathan.data.managers.RegionManager;
 import me.khalit.projectleviathan.data.managers.UserManager;
 import me.khalit.projectleviathan.data.sql.SQLHandler;
-import me.khalit.projectleviathan.api.Finder;
+import me.khalit.projectleviathan.api.CommandFinder;
 import me.khalit.projectleviathan.listeners.PlayerJoinListener;
-import me.khalit.projectleviathan.utils.reflection.Reflection;
+import me.khalit.projectleviathan.utils.reflection.ClassFinder;
 import me.khalit.projectleviathan.utils.reflection.TabExecutor;
 import me.khalit.projectleviathan.utils.exceptions.MetricsException;
 import me.khalit.projectleviathan.utils.reflection.packet.GuildEntity;
@@ -87,8 +87,8 @@ public class Main extends JavaPlugin {
             return;
         }
         try {
-            Finder finder = new Finder(this);
-            finder.findCommands();
+            ClassFinder.findClasses(this);
+            CommandFinder.findCommands();
         }
         catch (Exception ex) {
             // TODO: normal error
