@@ -1,5 +1,6 @@
 package me.khalit.projectleviathan.utils;
 
+import me.khalit.projectleviathan.api.builders.ItemBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -22,35 +23,33 @@ public class Parser {
 
     public static ItemStack getParsedItem(String syntax) {
         String[] args = syntax.split(" ");
-        ItemStack itemstack = getParsedItem(args[0], Integer.valueOf(args[1]));
-        assert itemstack != null;
-        ItemMeta itemmeta = itemstack.getItemMeta();
-        if ((args.length >= 3) && (!args[2].equalsIgnoreCase("*"))) {
-            itemmeta.setDisplayName(Util.fixColors(args[2].replace("_", " ")));
-        }
-        if ((args.length >= 4) && (!args[3].equalsIgnoreCase("*"))) {
-            String[] loreLines = args[3].split(";");
-            List<String> lore = new ArrayList<>();
-            for (String s : loreLines) {
-                lore.add(s.replace("_", " "));
-            }
-            itemmeta.setLore(Util.fixColors(lore));
-        }
-        itemstack.setItemMeta(itemmeta);
-        if ((args.length >= 5) && (!args[4].equalsIgnoreCase("*"))) {
-            String[] enchantments = args[4].split(";");
-            for (String s : enchantments) {
-                addEnchant(s, itemstack);
+        // syntax = diamond 5 name=test_test lore=test;test enchantments=sharpness:5;infinity:1
+        // untested
+        ItemStack itemStack = getParsedItem(args[0], Integer.valueOf(args[1]));
+        ItemBuilder itemBuilder = new ItemBuilder(itemStack);
+
+        for (String arg : args) {
+            String[] metaInfo = arg.split("=");
+            String meta = metaInfo[0];
+            String value = metaInfo[1];
+            switch (meta) {
+                case "name":
+                    itemBuilder.setName(value);
+                case "lore":
+                    itemBuilder.setLore(value.replace("_", " ").split(";"));
+                case "enchantments":
+                    for (String enchantment : value.split(";"))
+                        addEnchant(enchantment, itemBuilder);
             }
         }
-        return itemstack;
+        return itemBuilder.getItem();
     }
 
-    private static void addEnchant(String syntax, ItemStack is) {
+    private static void addEnchant(String syntax, ItemBuilder is) {
         String[] args = syntax.split(":");
         Enchantment ench = Enchantments.enchants.get(args[0]);
         int power = Integer.valueOf(args[1]);
-        is.addUnsafeEnchantment(ench, power);
+        is.addEnchantment(ench, power);
     }
 
     @SuppressWarnings("deprecation")

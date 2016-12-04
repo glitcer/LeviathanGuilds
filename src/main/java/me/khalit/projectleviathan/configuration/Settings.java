@@ -10,71 +10,34 @@ import java.util.List;
 
 public class Settings {
 
-    private static HashMap<String, Object> singleKeys = new HashMap<>();
-    private static HashMap<String, List<String>> multipleKeys = new HashMap<>();
-
-    public Settings() {
-        FileConfiguration config = Main.getInstance().getConfig();
-        for (String key : config.getKeys(true)) {
-            if (key.toLowerCase().endsWith("list")) {
-                List<String> list = config.getStringList(key);
-                if (list == null) {
-                    continue;
-                }
-                multipleKeys.put(key, Util.fixColors(list));
-                continue;
-            }
-            singleKeys.put(key, config.get(key));
-        }
-    }
+    private static final FileConfiguration CONFIG = Main.getInstance().getConfig();
 
     public static List<String> getStringList(String key) {
-        for (String find : multipleKeys.keySet()) {
-            if (find.equals(key)) return multipleKeys.get(key);
-        }
-        return Collections.singletonList("key can not be null");
+        return CONFIG.getStringList(key);
     }
 
     public static String getString(String key) {
-        for (String find : singleKeys.keySet()) {
-            if (find.equals(key)) return (String)singleKeys.get(key);
-        }
-        return "key can not be null";
+        return CONFIG.getString(key);
     }
 
     public static int getInt(String key) {
-        for (String find : singleKeys.keySet()) {
-            if (find.equals(key)) return (int)singleKeys.get(key);
-        }
-        return 0;
+        return CONFIG.getInt(key);
     }
 
     public static long getLong(String key) {
-        for (String find : singleKeys.keySet()) {
-            if (find.equals(key)) return (long)singleKeys.get(key);
-        }
-        return 0;
+        return CONFIG.getLong(key);
     }
 
     public static short getShort(String key) {
-        for (String find : singleKeys.keySet()) {
-            if (find.equals(key)) return (short)singleKeys.get(key);
-        }
-        return 0;
+        return (short) CONFIG.getInt(key);
     }
 
     public static Object get(String key) {
-        for (String find : singleKeys.keySet()) {
-            if (find.equals(key)) return singleKeys.get(key);
-        }
-        return null;
+        return CONFIG.get(key);
     }
 
     public static boolean getBoolean(String key) {
-        for (String find : singleKeys.keySet()) {
-            if (find.equals(key)) return (boolean)singleKeys.get(key);
-        }
-        return false;
+        return CONFIG.getBoolean(key);
     }
 
 

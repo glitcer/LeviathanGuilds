@@ -37,16 +37,7 @@ public class Region implements Data, Removable {
     }
 
     public boolean isNear(Location to) {
-        if (center == null) return false;
-        for (Region region : RegionManager.getRegions().values()) {
-            if (region.getCenter() == null) return false;
-            if (!center.getWorld().equals(region.getCenter().getWorld())) return false;
-
-            double dis = region.getCenter().distance(to);
-            int i = region.getSize();
-            return dis < (2 * i + 15);
-        }
-        return false;
+        return true; // TODO: 04.12.2016
     }
 
     public boolean isIn(Location location) {
@@ -72,7 +63,7 @@ public class Region implements Data, Removable {
     @Override
     public void save() {
         try {
-            Main.getSqlHandler().execute("UPDATE `regions` SET `guild`=" + guild.getTag() + ", `center`=" + Serializer.serializeLocation(center) + ", `size`=" + size + ", `world`=" + world.getName() + ", `parent`=" + parent + " WHERE `guild`=" + guild + "");
+           // Main.getSqlHandler().execute("UPDATE `regions` SET `guild`=" + guild.getTag() + ", `center`=" + Serializer.serializeLocation(center) + ", `size`=" + size + ", `world`=" + world.getName() + ", `parent`=" + parent + " WHERE `guild`=" + guild + "");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,7 +71,7 @@ public class Region implements Data, Removable {
 
     @Override
     public void insert() {
-        try {
+        try { // TODO: 04.12.2016
             /*
             PreparedStatement stmt = Main.getSqlHandler().getConnection().prepareStatement(
                     "INSERT INTO `regions` (`guild`, `center`, `size`, `world`, `parent`) VALUES (?, ?, ?, ?, ?)");

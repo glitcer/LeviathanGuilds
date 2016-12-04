@@ -36,7 +36,7 @@ public class GuildEntity {
         }
         GuildEntity.entityClassPath = Reflection.getCraftClass(classPathEntity);
 
-        setLocationMethod = ModernReflection.getMethod(entityClassPath, "setLocation", false);
+        setLocationMethod = ModernReflection.getMethod(entityClassPath, "setLocation");
         getIdMethod = ModernReflection.getMethod(entityClassPath, int.class, "getId", false);
     }
 

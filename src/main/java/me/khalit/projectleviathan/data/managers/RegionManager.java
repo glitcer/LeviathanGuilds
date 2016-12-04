@@ -16,6 +16,7 @@ public class RegionManager {
     @Getter
     private static final Map<String, Region> regions = new WeakHashMap<>();
 
+    /*
     public static void loadRegions() {
         try {
             Main.getSqlHandler().query("SELECT * FROM regions", result -> {
@@ -37,6 +38,7 @@ public class RegionManager {
             e.printStackTrace();
         }
     }
+    */
 
     @NonNull
     public static Region getRegion(Guild guild) {

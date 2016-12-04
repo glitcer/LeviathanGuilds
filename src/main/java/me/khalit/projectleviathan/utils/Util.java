@@ -31,16 +31,16 @@ public class Util {
         return fixed;
     }
 
-    public static void sendMessage(Player player, String text) {
-        player.sendMessage(fixColors(text));
-    }
-
-    public static void sendMessage(CommandSender sender, String text) {
-        sender.sendMessage(fixColors(text));
-    }
-
     public static void sendMessage(User user, String text) {
-        user.getPlayer().sendMessage(fixColors(text));
+        user.getPlayer().sendMessage(text);
+    }
+
+    public static void sendMessage(Object player, String text) {
+        ((Player)player).sendMessage(text);
+    }
+
+    public static void sendMessageFixed(Object player, String text) {
+        ((Player)player).sendMessage(fixColors(text));
     }
 
     public static void sendList(Player player, List<String> list) {
@@ -83,8 +83,7 @@ public class Util {
     }
 
     public static int getRandomInteger(int min, int max) {
-        int i = random.nextInt((max - min) + 1) + min;
-        return i;
+        return random.nextInt((max - min) + 1) + min;
     }
 
 }

@@ -2,10 +2,14 @@ package me.khalit.projectleviathan.configuration;
 
 import lombok.Getter;
 import me.khalit.projectleviathan.Main;
+import me.khalit.projectleviathan.utils.Util;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class LocaleFile {
 
@@ -13,6 +17,9 @@ public class LocaleFile {
     private final File file;
     private String directory;
     private FileConfiguration fileConfiguration;
+
+    public Map<String, String> singleKeys = new HashMap<>();
+    public Map<String, List<String>> multipleKeys = new HashMap<>();
 
     public LocaleFile(String fileName, String directory) {
         this.directory = directory;
@@ -30,6 +37,21 @@ public class LocaleFile {
                     YamlConfiguration.loadConfiguration(file);
         }
         return fileConfiguration;
+    }
+
+    public void load() {
+        FileConfiguration messages = getFileConfiguration();
+        for (String key : messages.getKeys(true)) {
+            if (key.toLowerCase().endsWith("list")) {
+                List<String> list = messages.getStringList(key);
+                if (list == null) {
+                    continue;
+                }
+                multipleKeys.put(key, Util.fixColors(list));
+                continue;
+            }
+            singleKeys.put(key, Util.fixColors(messages.getString(key)));
+        }
     }
 
     public void save() {

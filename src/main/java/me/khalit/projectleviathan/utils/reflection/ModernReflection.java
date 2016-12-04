@@ -121,4 +121,24 @@ public class ModernReflection {
         return null;
     }
 
+    public static MethodHandle getMethod(Class<?> clazz, String name) {
+        try {
+            MethodType methodType = MethodType.methodType(void.class);
+            return MethodHandles.lookup().findVirtual(clazz, name, methodType);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return null;
+    }
+
+    public static MethodHandle getMethod(Class<?> clazz, String name, Class... params) {
+        try {
+            MethodType methodType = MethodType.methodType(void.class, params);
+            return MethodHandles.lookup().findVirtual(clazz, name, methodType);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return null;
+    }
+
 }

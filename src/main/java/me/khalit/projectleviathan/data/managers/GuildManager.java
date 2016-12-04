@@ -54,7 +54,7 @@ public class GuildManager {
                     guild.setRank(rank);
                     guild.setAllyInvites(new ArrayList<>());
                     guild.setBorn(result.getLong("born"));
-                    guild.setHome(Serializer.deserializeLocation(result.getString("home")));
+                    //guild.setHome(Serializer.deserializeLocation(result.getString("home")));
                     guild.setMembers(UserManager.fromStrings(Serializer.deserializeList(result.getString("members"))));
                     guild.setOwner(UserManager.getUser(result.getString("owner")));
                     guild.setPvp(result.getBoolean("pvp"));

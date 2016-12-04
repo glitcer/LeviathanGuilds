@@ -5,13 +5,15 @@ import me.khalit.projectleviathan.Main;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Locale {
 
-    private static final String directory =
+    private static final String absolutePath =
             Main.getInstance().getDataFolder() + "/locales/";
-    private static final String dirName =
+    private static final String directory =
             "locales/";
 
     @Getter
@@ -19,14 +21,14 @@ public class Locale {
     @Getter
     private static final List<File> localeFiles = new ArrayList<>();
     @Getter
-    private static final List<LocaleFile> configurableFiles = new ArrayList<>();
+    private static final Map<String, LocaleFile> configurableFiles = new HashMap<>();
 
     public static boolean exists(String locale) {
         return availableLocales.contains(locale.toUpperCase());
     }
 
     public static boolean existsFile(String fileName) {
-        return localeFiles.contains(new File(directory + fileName));
+        return localeFiles.contains(new File(absolutePath + fileName));
     }
 
     public static String localeByConfigurableFile(LocaleFile concurrentConfigurableFile) {
@@ -41,39 +43,35 @@ public class Locale {
     }
 
     public static LocaleFile fileByLocale(String locale) {
-        for (LocaleFile concurrentConfigurableFile : configurableFiles) {
-            if (localeByConfigurableFile(concurrentConfigurableFile).equalsIgnoreCase(locale)) {
-                return concurrentConfigurableFile;
-            }
-        }
-        return null;
+        return configurableFiles.get(locale);
     }
 
 
     public static void initializeLocaleFiles() {
-        File[] files = new File(directory).listFiles();
+        File folder = new File(absolutePath);
+        File[] files = folder.listFiles();
 
         if (files == null || files.length <= 0) {
-            if (!new File(directory).exists()) {
-                new File(directory).mkdir();
+            if (!folder.exists()) {
+                folder.mkdirs();
             }
 
             // creating default en locale
-            ConfigurableFile configurableFile = new ConfigurableFile("locales/locale_en.yml", directory, dirName);
+            ConfigurableFile configurableFile = new ConfigurableFile("locales/locale_en.yml", absolutePath, directory);
             configurableFile.saveDefault();
             configurableFile.reload();
 
-            files = new File(directory).listFiles();
+            files = folder.listFiles();
         }
-        assert files != null;
         for (File file : files) {
             if (file.getName().endsWith(".yml")) {
                 String locale = localeByName(file.getName());
 
-                LocaleFile LocaleFile =
-                        new LocaleFile(file.getName(), directory);
-                LocaleFile.save();
-                LocaleFile.reload();
+                LocaleFile localeFile =
+                        new LocaleFile(file.getName(), absolutePath);
+                localeFile.save();
+                localeFile.reload();
+                localeFile.load();
 
                 if (!exists(locale))
                     availableLocales.add(locale.toUpperCase());
@@ -81,11 +79,11 @@ public class Locale {
                 if (!existsFile(file.getName())) {
                     localeFiles.add(file);
 
-                    configurableFiles.add(LocaleFile);
+                    configurableFiles.put(locale, localeFile);
                 }
 
                 Main.getInstance().getLogger().info("    Loaded " + locale + " language! (" + file.getName() + ")");
-                Main.getInstance().getLogger().info("       Author: " + LocaleFile
+                Main.getInstance().getLogger().info("       Author: " + localeFile
                         .getFileConfiguration().get("author"));
             }
         }

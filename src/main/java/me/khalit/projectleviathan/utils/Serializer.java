@@ -11,6 +11,7 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,26 +36,6 @@ public class Serializer {
         List<String> list = new ArrayList<>();
         Collections.addAll(list, split);
         return list;
-    }
-
-    public static String serializeLocation(Location location) {
-        return location.getWorld().getName() + " "
-                + location.getBlockX() + " "
-                + location.getBlockY() + " "
-                + location.getBlockZ() + " "
-                + Util.round(location.getYaw(), 2) + " "
-                + Util.round(location.getPitch(), 2) + " ";
-    }
-
-    public static Location deserializeLocation(String parsedLoc) {
-        String[] split = parsedLoc.split(" ");
-        World world = Bukkit.getServer().getWorld(split[0]);
-        if (world == null) {
-            return null;
-        }
-        return new Location(world,
-                Double.valueOf(split[1]), Double.valueOf(split[2]),
-                Double.valueOf(split[3]), Float.valueOf(split[4]), Float.valueOf(split[5]));
     }
 
     public static String serializeInventory(ItemStack[] items) throws IllegalStateException {

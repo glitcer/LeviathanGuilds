@@ -37,6 +37,21 @@ public class Guild implements Data, Removable {
 
     @Override
     public void save() {
+
+    }
+
+    @Override
+    public void insert() {
+
+    }
+
+    @Override
+    public void delete() {
+
+    }
+    /*
+    @Override
+    public void save() {
         try {
             Main.getSqlHandler().execute("UPDATE guilds SET `tag`=" + tag
                     + ", `name`=" + name +
@@ -89,4 +104,5 @@ public class Guild implements Data, Removable {
             e.printStackTrace();
         }
     }
+    */
 }
